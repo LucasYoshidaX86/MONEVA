@@ -1,0 +1,53 @@
+:root {
+  --bg-900: #0f1113;
+  --bg-800: #1a1d20;
+  --bg-700: #202428;
+  --text: #f1f5f9;
+  --muted: #a7b0b7;
+  --green: #00c053;     // cor do botão
+  --green-strong: #00C053;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: radial-gradient(1200px 800px at 70% 20%, #14171a, #0f1113);
+  color: var(--text);
+}
+
+.login-card {
+  background: var(--bg-800);
+  border: 1px solid rgba(25, 208, 125, 0.25);
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+}
+
+.input-group-text {
+  background: var(--bg-700);
+  color: var(--text);
+  border: none;
+}
+
+.form-control {
+  background: #3d87e2;
+  color: var(--text);
+  border: none;
+  &:focus {
+    box-shadow: 0 0 0 .25rem rgba(25, 208, 125, .2);
+  }
+}
+
+.btn-success {
+  background-color: var(--green);
+  border-color: var(--green);
+  &:hover { background-color: var(--green-strong); border-color: var(--green-strong); }
+}
+
+.btn-outline-success {
+  color: var(--green);
+  border-color: var(--green);
+  &:hover { background: rgba(25,208,125,.1); }
+}
+
+/* Exemplo para imagem do porquinho à direita (se usar) */
+.pig-img { max-width: 220px; height: auto; filter: drop-shadow(0 2px 12px rgba(0,0,0,.35)); }
