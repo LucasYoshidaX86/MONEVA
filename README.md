@@ -25,7 +25,7 @@ Com o avanço da tecnologia, a facilidade na aquisição de produtos vem crescen
 Por isso, é fundamental compreender como o conhecimento financeiro pode proporcionar uma vida livre de dívidas e preocupações.
 
 O **Moneva** tem como objetivo ajudar pessoas que desejam começar sua vida financeira de forma organizada ou aprimorar a gestão de suas finanças.  
-Utilizando **HTML**, **CSS** e **JavaScript**, o projeto cria uma experiência gamificada e educativa voltada à gestão financeira pessoal.
+Utilizando **TypeScript**, **SCSS** e **HTML**, o projeto cria uma experiência gamificada e educativa voltada à gestão financeira pessoal.
 
 ---
 
