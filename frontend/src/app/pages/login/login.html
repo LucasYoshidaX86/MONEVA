@@ -1,14 +1,22 @@
 <div class="container py-5 text-light">
-  <div class="row justify-content-center">
+  <div class="row justify-content-start">
     <div class="col-12 col-md-6 col-lg-5">
-      <div class="card bg-dark text-light">
+      <div class="card login-card text-light">
         <div class="card-body">
           <h3 class="mb-3 text-center">Portal do Aluno</h3>
 
           <div class="btn-group w-100 mb-3">
-            <button class="btn" [class.btn-success]="mode==='login'" [class.btn-outline-success]="mode!=='login'" (click)="switch('login')">Entrar</button>
-            <button class="btn" [class.btn-success]="mode==='register'" [class.btn-outline-success]="mode!=='register'" (click)="switch('register')">Criar conta</button>
+            <button 
+              class="btn tab-btn" 
+              [class.active]="mode === 'login'" 
+              (click)="switch('login')">Entrar</button>
+
+            <button 
+              class="btn tab-btn" 
+              [class.active]="mode === 'register'" 
+              (click)="switch('register')">Criar conta</button>
           </div>
+
 
           <div *ngIf="errorMsg" class="alert alert-warning">{{ errorMsg }}</div>
 
@@ -21,7 +29,16 @@
               <label class="form-label">Senha</label>
               <input type="password" class="form-control" formControlName="password">
             </div>
-            <button class="btn btn-success w-100" [disabled]="loginForm.invalid || loading">Acessar</button>
+            <button 
+              class="btn btn-success w-100" 
+              [disabled]="loginForm.invalid || loading">
+              Acessar
+            </button>
+            <div class="text-center mt-2" *ngIf="mode==='login'">
+              <button type="button" class="btn btn-link p-0" (click)="forgotPassword()">
+                Esqueceu sua senha?
+              </button>
+            </div>
           </form>
 
           <form *ngIf="mode==='register'" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
@@ -40,9 +57,15 @@
             <button class="btn btn-success w-100" [disabled]="registerForm.invalid || loading">Criar conta</button>
           </form>
 
-          <div class="text-center mt-3">
-            <button class="btn btn-link" (click)="forgotPassword()">Esqueceu sua senha?</button>
-          </div>
+          <!-- ====== Barra Superior ====== -->
+          <header class="topbar d-flex justify-content-between align-items-center px-4 py-2">
+            <div class="topbar__logo d-flex align-items-center">
+              <img src="/img/logo.png" alt="Logo do Projeto" class="topbar__img me-2">
+              <span class="fw-bold text-light fs-5">Moneva</span>
+            </div>
+
+            <button class="btn btn-outline-success btn-sm topbar__btn">Saiba mais</button>
+          </header>
         </div>
       </div>
     </div>

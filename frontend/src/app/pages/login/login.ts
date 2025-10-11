@@ -16,7 +16,7 @@ export class LoginComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  mode: 'login' | 'register' = 'register'; // mude para 'login' se preferir
+  mode: 'login' | 'register' = 'register';
   loading = false;
   errorMsg = '';
 
