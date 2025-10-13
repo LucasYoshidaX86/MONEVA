@@ -14,8 +14,8 @@ aside {
   width: 250px;
   min-height: 100vh;
   border-right: 1px solid linear-gradient(180deg, #007a4d, #003822);
-  background-color: linear-gradient(180deg, #007a4d, #003822);
   transition: all 0.3s ease;
+  
 }
 
 aside h2 {
@@ -27,11 +27,13 @@ aside .nav-link {
   padding: 8px 12px;
   border-radius: 8px;
   transition: "background 0.3s", transform 0.2s;
+  transition: all 0.2s;  
 }
 
 aside .nav-link:hover {
   background-color: linear-gradient(180deg, #007a4d, #003822);
   transform: translateX(4px);
+ 
 }
 
 .nav-link.active {

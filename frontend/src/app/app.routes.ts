@@ -4,10 +4,12 @@ import { authGuard } from './core/auth.guard';
 import { LoginComponent } from './pages/login/login';
 import { Home } from './pages/home/home';
 import { Trilha } from './pages/trilha/trilha';
+import { SaibaMais } from './pages/saiba-mais/saiba-mais';
 
 export const routes: Routes = [
-  { path: 'Login', component: LoginComponent },
-  { path: 'Home', component: Home, canActivate: [authGuard] },
-  { path: 'Trilha', component: Trilha, canActivate: [authGuard] },
-  { path: '**', redirectTo: 'Login' }
+  { path: 'login', component: LoginComponent },
+  { path: 'home', component: Home, canActivate: [authGuard] },
+  { path: 'trilha', component: Trilha, canActivate: [authGuard] },
+  { path: 'saiba-mais', component: SaibaMais, canActivate: [authGuard] },
+  { path: '**', redirectTo: 'login' }
 ];

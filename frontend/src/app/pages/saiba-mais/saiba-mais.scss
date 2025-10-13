@@ -1,0 +1,23 @@
+.nav-link.active {
+  font-weight: bold;
+  color: #00ff88 !important;
+}
+
+.card {
+  border-radius: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.btn-success {
+  background: linear-gradient(90deg, #00b37e, #00ff88);
+  border: none;
+}
+
+.btn-success:hover {
+  background: linear-gradient(90deg, #00ff88, #00b37e);
+}

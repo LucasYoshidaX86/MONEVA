@@ -4,7 +4,7 @@
     <img src="/img/logo.png" alt="Logo do Projeto" class="topbar__img me-2">
     <span class="fw-bold text-light fs-5">Moneva</span>
   </div>
-  <button class="btn btn-outline-success btn-sm topbar__btn">Saiba mais</button>
+  <button class="btn btn-outline-success btn-sm topbar__btn" routerLink="/saiba-mais">Saiba mais</button>
 </header>
 
 <div class="container text-light content-with-topbar">
@@ -41,7 +41,7 @@
               <input type="password" class="form-control" formControlName="password">
             </div>
             <button 
-              class="btn btn-success w-100" routerLink="/Home"
+              class="btn btn-success w-100" routerLink="/home"
               [disabled]="loginForm.invalid || loading" 
               >
               Acessar
