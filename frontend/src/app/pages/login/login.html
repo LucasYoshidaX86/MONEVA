@@ -1,5 +1,15 @@
-<div class="container py-5 text-light">
-  <div class="row justify-content-start">
+<!-- ====== Barra Superior ====== -->
+<header class="topbar d-flex justify-content-between align-items-center px-4 py-2">
+  <div class="topbar__logo d-flex align-items-center">
+    <img src="/img/logo.png" alt="Logo do Projeto" class="topbar__img me-2">
+    <span class="fw-bold text-light fs-5">Moneva</span>
+  </div>
+  <button class="btn btn-outline-success btn-sm topbar__btn">Saiba mais</button>
+</header>
+
+<div class="container text-light content-with-topbar">
+  <div class="row align-items-start gy-4">
+    <!-- Coluna esquerda: Card de login -->
     <div class="col-12 col-md-6 col-lg-5">
       <div class="card login-card text-light">
         <div class="card-body">
@@ -20,6 +30,7 @@
 
           <div *ngIf="errorMsg" class="alert alert-warning">{{ errorMsg }}</div>
 
+          <!-- FORM LOGIN -->
           <form *ngIf="mode==='login'" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
             <div class="mb-3">
               <label class="form-label">E-mail</label>
@@ -42,6 +53,7 @@
             </div>
           </form>
 
+          <!-- FORM CADASTRO -->
           <form *ngIf="mode==='register'" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
             <div class="mb-3">
               <label class="form-label">Nome</label>
@@ -56,19 +68,31 @@
               <input type="password" class="form-control" formControlName="password">
             </div>
             <button class="btn btn-success w-100" [disabled]="registerForm.invalid || loading">Criar conta</button>
-          </form>
-
-          <!-- ====== Barra Superior ====== -->
-          <header class="topbar d-flex justify-content-between align-items-center px-4 py-2">
-            <div class="topbar__logo d-flex align-items-center">
-              <img src="/img/logo.png" alt="Logo do Projeto" class="topbar__img me-2">
-              <span class="fw-bold text-light fs-5">Moneva</span>
-            </div>
-
-            <button class="btn btn-outline-success btn-sm topbar__btn">Saiba mais</button>
-          </header>
+          </form>        
         </div>
       </div>
+    </div>
+
+    <!-- Coluna direita: Hero (textos + porquinho) -->
+    <div class="col-12 col-lg-7">
+      <section class="hero text-center text-lg-center">
+        <h1 class="hero__title mb-3">
+          Comece sua<br class="d-none d-md-inline" />
+          jornada financeira!!!
+        </h1>
+
+        <img class="pig-img my-2 my-lg-1" src="/img/Wallace-Pigton.png" alt="Cofrinho Moneva">
+
+        <p class="hero__subtitle mb-3">
+          DA TEORIA À PRÁTICA SUA EVOLUÇÃO FINANCEIRA<br class="d-none d-md-inline" />
+          EM UM SÓ LUGAR!
+        </p>
+
+        <p class="hero__text">
+          ALÉM DE CONTEÚDOS INTERATIVOS, VOCÊ CONTA COM UM GESTOR INTELIGENTE
+          PARA APLICAR O QUE APRENDEU NO DIA A DIA.
+        </p>
+      </section>
     </div>
   </div>
 </div>

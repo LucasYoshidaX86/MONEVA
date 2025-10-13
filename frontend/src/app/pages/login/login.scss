@@ -39,7 +39,7 @@
 }
 
 .btn-success {
-  border: 1px solid rgba(0, 192, 83, 0.4);
+  border: 1px solid #00c05366;
   color: var(--green);
   background-color: #00c053;
   font-weight: 600;
@@ -52,7 +52,7 @@
 .btn-outline-success {
   color: var(--green);
   border-color: var(--green);
-  &:hover { background: rgba(25,208,125,.1); }
+  &:hover { background: rgba(255, 255, 255, 0.1); }
   &.able {
     background-color: #00c053;
     color: #ffffff;
@@ -114,10 +114,52 @@
   letter-spacing: 0.4px;
   border-radius: 5px;
   transition: background 0.2s ease;
-  color: var(--green);
+  color: white;
   border-color: var(--green);
-
+  background: #00c05366;
   &:hover {
-    background: rgba(0,192,83,0.1);
+    background: #00c053;
   }
 }
+
+
+
+/* Espaço para o conteúdo não ficar sob a topbar fixa */
+.content-with-topbar {
+  padding-top: 80px; /* ajuste conforme a altura da sua topbar */
+  padding-bottom: 48px;
+}
+
+/* Card de login (usa suas variáveis) */
+.card.login-card {
+  background: var(--bg-800);
+  border: 1px solid rgba(25, 208, 125, 0.25);
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+}
+
+/* Inputs */
+.input-group-text { background: var(--bg-700); color: var(--text); border: none; }
+.form-control {
+  background: #262a2f; color: var(--text); border: none;
+  &:focus { box-shadow: 0 0 0 .25rem rgba(25, 208, 125, .2); }
+}
+
+/* Hero (direita) */
+.hero__title   { font-weight: 800; line-height: 1.1; font-size: clamp(28px, 5.2vw, 56px); }
+.hero__subtitle{ font-weight: 600; letter-spacing: .3px; font-size: clamp(16px, 2.2vw, 22px); color: #dfe6ea; }
+.hero__text    { max-width: 720px; font-size: clamp(14px, 1.8vw, 18px); color: var(--muted); }
+
+/* Porquinho */
+.pig-img {
+  max-width: clamp(160px, 28vw, 280px);
+  height: auto;
+  filter: drop-shadow(0 3px 18px rgba(0,0,0,.35));
+}
+
+/* Responsivo: stack no mobile */
+@media (max-width: 991.98px) {
+  .content-with-topbar { padding-top: 88px; }
+  .hero { text-align: center; }
+}
+
