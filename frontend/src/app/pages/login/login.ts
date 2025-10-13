@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
@@ -44,7 +45,7 @@ export class LoginComponent {
     try {
       const { email, password } = this.loginForm.value;
       await this.auth.login(email!, password!);
-      this.router.navigateByUrl('/dashboard');
+      this.router.navigateByUrl('/home');
     } catch (e:any) {
       console.error('Login error:', e);
       this.errorMsg = this.translateFirebaseError(e?.code);
@@ -60,7 +61,7 @@ export class LoginComponent {
     try {
       const { name, email, password } = this.registerForm.value;
       await this.auth.register({ name: name!, email: email!, password: password! });
-      this.router.navigateByUrl('/dashboard');
+      this.router.navigateByUrl('/home');
     } catch (e:any) {
       console.error('Register error:', e);
       this.errorMsg = this.translateFirebaseError(e?.code);

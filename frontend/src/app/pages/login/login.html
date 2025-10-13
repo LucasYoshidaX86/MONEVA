@@ -9,7 +9,7 @@
             <button 
               class="btn tab-btn" 
               [class.active]="mode === 'login'" 
-              (click)="switch('login')">Entrar</button>
+              (click)="switch('login')" >Entrar</button>
 
             <button 
               class="btn tab-btn" 
@@ -30,8 +30,9 @@
               <input type="password" class="form-control" formControlName="password">
             </div>
             <button 
-              class="btn btn-success w-100" 
-              [disabled]="loginForm.invalid || loading">
+              class="btn btn-success w-100" routerLink="/Home"
+              [disabled]="loginForm.invalid || loading" 
+              >
               Acessar
             </button>
             <div class="text-center mt-2" *ngIf="mode==='login'">
