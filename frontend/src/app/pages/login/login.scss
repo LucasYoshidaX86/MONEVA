@@ -163,3 +163,42 @@
   .hero { text-align: center; }
 }
 
+
+
+/* Input group com raios contínuos */
+.input-group-text {
+  background: var(--bg-700);
+  color: var(--text);
+  border: none;
+  border-radius: 12px 0 0 12px;
+  min-width: 46px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.input-group .form-control {
+  background: #262a2f;
+  color: var(--text);
+  border: none;
+  border-radius: 0;
+}
+
+.input-group .form-control:first-child {
+  border-radius: 0 12px 12px 0; /* quando não tem olhinho */
+}
+
+.input-group .toggle-eye {
+  border-radius: 0 12px 12px 0; /* fecha o raio do lado direito */
+  border-color: rgba(255,255,255,.15);
+  color: #cfd6db;
+  background: transparent;
+}
+.input-group .toggle-eye:hover {
+  background: rgba(255,255,255,.06);
+}
+
+.form-control.is-invalid {
+  box-shadow: 0 0 0 .25rem rgba(255, 80, 80, .15);
+}
+
+

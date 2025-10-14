@@ -1,9 +1,8 @@
 import { Component, inject, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators, ValidationErrors, AbstractControl, FormGroup } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
-import { RouterLink } from "@angular/router";
 
 
 @Component({
@@ -22,6 +21,11 @@ export class LoginComponent {
   loading = false;
   errorMsg = '';
 
+  // controles de exibição da senha
+  showLoginPass = false;
+  showRegPass = false;
+  showRegPass2 = false;
+
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -31,11 +35,12 @@ export class LoginComponent {
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]]
-  });
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+  }, { validators: this.passwordsMatch('password', 'confirmPassword') });
 
   get lf() { return this.loginForm.controls; }
-  get rf() { return this.registerForm.controls; }
+  get rf() { return this.registerForm.controls as any; }
 
   switch(m:'login'|'register'){ this.mode = m; this.errorMsg = ''; }
 
@@ -57,7 +62,7 @@ export class LoginComponent {
 
   async submitRegister() {
     this.errorMsg = '';
-    if (this.registerForm.invalid) return;
+    if (this.registerForm.invalid || this.registerForm.errors?.['passwordMismatch']) return;
     this.loading = true;
     try {
       const { name, email, password } = this.registerForm.value;
@@ -81,6 +86,16 @@ export class LoginComponent {
       console.error('Reset error:', e);
       this.errorMsg = this.translateFirebaseError(e?.code);
     }
+  }
+
+  private passwordsMatch(pwdKey: string, confirmKey: string) {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const g = group as FormGroup;
+      const pwd = g.get(pwdKey)?.value;
+      const cfm = g.get(confirmKey)?.value;
+      if (!pwd || !cfm) return null;
+      return pwd === cfm ? null : { passwordMismatch: true };
+    };
   }
 
   private translateFirebaseError(code?: string): string {
