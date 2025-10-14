@@ -9,66 +9,178 @@
 
 <div class="container text-light content-with-topbar">
   <div class="row align-items-start gy-4">
+
     <!-- Coluna esquerda: Card de login -->
     <div class="col-12 col-md-6 col-lg-5">
       <div class="card login-card text-light">
         <div class="card-body">
           <h3 class="mb-3 text-center">Portal do Aluno</h3>
 
-          <div class="btn-group w-100 mb-3">
-            <button 
-              class="btn tab-btn" 
-              [class.active]="mode === 'login'" 
-              (click)="switch('login')" >Entrar</button>
+          <div class="btn-group w-100 mb-9">
+            <button
+              class="btn tab-btn"
+              [class.active]="mode === 'login'"
+              (click)="switch('login')">
+              Entrar
+            </button>
 
-            <button 
-              class="btn tab-btn" 
-              [class.active]="mode === 'register'" 
-              (click)="switch('register')">Criar conta</button>
+            <button
+              class="btn tab-btn"
+              [class.active]="mode === 'register'"
+              (click)="switch('register')">
+              Criar conta
+            </button>
           </div>
 
-
-          <div *ngIf="errorMsg" class="alert alert-warning">{{ errorMsg }}</div>
+          @if (errorMsg) {
+            <div class="alert alert-warning">{{ errorMsg }}</div>
+          }
 
           <!-- FORM LOGIN -->
-          <form *ngIf="mode==='login'" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-            <div class="mb-3">
-              <label class="form-label">E-mail</label>
-              <input type="email" class="form-control" formControlName="email">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Senha</label>
-              <input type="password" class="form-control" formControlName="password">
-            </div>
-            <button 
-              class="btn btn-success w-100" routerLink="/home"
-              [disabled]="loginForm.invalid || loading" 
-              >
-              Acessar
-            </button>
-            <div class="text-center mt-2" *ngIf="mode==='login'">
-              <button type="button" class="btn btn-link p-0" (click)="forgotPassword()">
-                Esqueceu sua senha?
+          @if (mode === 'login') {
+            <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
+
+              <!-- E-mail -->
+              <div class="mb-3">
+                <label class="form-label">E-mail</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                  <input type="email"
+                         class="form-control"
+                         formControlName="email"
+                         autocomplete="email"
+                         [class.is-invalid]="lf.email.touched && lf.email.invalid">
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="lf.email.touched && lf.email.errors">
+                  <small *ngIf="lf.email.errors['required']">Informe o e-mail.</small>
+                  <small *ngIf="lf.email.errors['email']">E-mail inválido.</small>
+                </div>
+              </div>
+
+              <!-- Senha -->
+              <div class="mb-2">
+                <label class="form-label">Senha</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                  <input [type]="showLoginPass ? 'text' : 'password'"
+                         class="form-control"
+                         formControlName="password"
+                         autocomplete="current-password"
+                         [class.is-invalid]="lf.password.touched && lf.password.invalid">
+                  <button type="button"
+                          class="btn btn-outline-secondary toggle-eye"
+                          (click)="showLoginPass = !showLoginPass"
+                          [attr.aria-label]="showLoginPass ? 'Ocultar senha' : 'Mostrar senha'">
+                    <i class="bi" [ngClass]="showLoginPass ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="lf.password.touched && lf.password.errors">
+                  <small *ngIf="lf.password.errors['required']">Informe a senha.</small>
+                  <small *ngIf="lf.password.errors['minlength']">Mínimo de 8 caracteres.</small>
+                </div>
+              </div>
+
+              <button type="submit"
+                      class="btn btn-success w-100"
+                      [disabled]="loginForm.invalid || loading">
+                Acessar
               </button>
-            </div>
-          </form>
+
+              <div class="text-center mt-2">
+                <button type="button" class="btn btn-link p-0" (click)="forgotPassword()">
+                  Esqueceu sua senha?
+                </button>
+              </div>
+            </form>
+          }
 
           <!-- FORM CADASTRO -->
-          <form *ngIf="mode==='register'" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
-            <div class="mb-3">
-              <label class="form-label">Nome</label>
-              <input class="form-control" formControlName="name">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">E-mail</label>
-              <input type="email" class="form-control" formControlName="email">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Senha</label>
-              <input type="password" class="form-control" formControlName="password">
-            </div>
-            <button class="btn btn-success w-100" [disabled]="registerForm.invalid || loading">Criar conta</button>
-          </form>        
+          @if (mode === 'register') {
+            <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
+
+              <!-- Nome -->
+              <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-person"></i></span>
+                  <input class="form-control"
+                         formControlName="name"
+                         autocomplete="name"
+                         [class.is-invalid]="rf.name.touched && rf.name.invalid">
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="rf.name.touched && rf.name.errors">
+                  <small *ngIf="rf.name.errors['required']">Informe seu nome.</small>
+                  <small *ngIf="rf.name.errors['minlength']">Mínimo de 3 caracteres.</small>
+                </div>
+              </div>
+
+              <!-- E-mail -->
+              <div class="mb-3">
+                <label class="form-label">E-mail</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                  <input type="email"
+                         class="form-control"
+                         formControlName="email"
+                         autocomplete="email"
+                         [class.is-invalid]="rf.email.touched && rf.email.invalid">
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="rf.email.touched && rf.email.errors">
+                  <small *ngIf="rf.email.errors['required']">Informe o e-mail.</small>
+                  <small *ngIf="rf.email.errors['email']">E-mail inválido.</small>
+                </div>
+              </div>
+
+              <!-- Senha -->
+              <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                  <input [type]="showRegPass ? 'text' : 'password'"
+                         class="form-control"
+                         formControlName="password"
+                         autocomplete="new-password"
+                         [class.is-invalid]="rf.password.touched && rf.password.invalid">
+                  <button type="button"
+                          class="btn btn-outline-secondary toggle-eye"
+                          (click)="showRegPass = !showRegPass">
+                    <i class="bi" [ngClass]="showRegPass ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="rf.password.touched && rf.password.errors">
+                  <small *ngIf="rf.password.errors['required']">Informe a senha.</small>
+                  <small *ngIf="rf.password.errors['minlength']">Mínimo de 8 caracteres.</small>
+                </div>
+              </div>
+
+              <!-- Confirmar Senha -->
+              <div class="mb-3">
+                <label class="form-label">Confirmar Senha</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                  <input [type]="showRegPass2 ? 'text' : 'password'"
+                         class="form-control"
+                         formControlName="confirmPassword"
+                         autocomplete="new-password"
+                         [class.is-invalid]="(registerForm.touched && registerForm.errors?.['passwordMismatch']) || (rf.confirmPassword.touched && rf.confirmPassword.invalid)">
+                  <button type="button"
+                          class="btn btn-outline-secondary toggle-eye"
+                          (click)="showRegPass2 = !showRegPass2">
+                    <i class="bi" [ngClass]="showRegPass2 ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="registerForm.touched && registerForm.errors?.['passwordMismatch']">
+                  <small>As senhas não conferem.</small>
+                </div>
+              </div>
+
+              <button type="submit"
+                      class="btn btn-success w-100"
+                      [disabled]="registerForm.invalid || registerForm.errors?.['passwordMismatch'] || loading">
+                Criar conta
+              </button>
+            </form>
+          }
         </div>
       </div>
     </div>
@@ -83,7 +195,7 @@
 
         <img class="pig-img my-2 my-lg-1" src="/img/Wallace-Pigton.png" alt="Cofrinho Moneva">
 
-        <p class="hero__subtitle mb-3">
+        <p class="hero__subtitle mb-1">
           DA TEORIA À PRÁTICA SUA EVOLUÇÃO FINANCEIRA<br class="d-none d-md-inline" />
           EM UM SÓ LUGAR!
         </p>
