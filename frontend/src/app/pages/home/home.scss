@@ -1,50 +1,49 @@
-/* ======= RESET BÁSICO ======= */
+/* ======= RESET ======= */
 body, html {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #000; /* Mantém o tema escuro */
+  background-color: #000;
   color: #fff;
   font-family: 'Poppins', sans-serif;
 }
 
 /* ======= SIDEBAR ======= */
-aside {
+.sidebar {
   width: 250px;
   min-height: 100vh;
-  border-right: 1px solid linear-gradient(180deg, #007a4d, #003822);
+  background: linear-gradient(180deg, #007a4d, #003822);
   transition: all 0.3s ease;
-  
 }
 
-aside h2 {
+.sidebar h2 {
   letter-spacing: 1px;
 }
 
-aside .nav-link {
+.sidebar .nav-link {
   font-size: 0.95rem;
   padding: 8px 12px;
   border-radius: 8px;
-  transition: "background 0.3s", transform 0.2s;
-  transition: all 0.2s;  
+  transition: background 0.3s, transform 0.2s;
 }
 
-aside .nav-link:hover {
-  background-color: linear-gradient(180deg, #007a4d, #003822);
+.sidebar .nav-link:hover {
+  background: linear-gradient(90deg, rgba(0,255,136,0.15), transparent);
   transform: translateX(4px);
- 
 }
 
 .nav-link.active {
-  background-color: rgba(0, 255, 136, 0.2);
+  background: linear-gradient(90deg, rgba(0,255,136,0.15), transparent);
   font-weight: bold;
   color: #00ff88 !important;
+  border-left: 4px solid #00ff88;
+  border-radius: 8px 0 0 8px;
 }
 
-/* ======= CONTEÚDO PRINCIPAL ======= */
+/* ======= MAIN ======= */
 main {
-  background-color: #0a0a0a;
+  background-color: #0f1113;
   overflow-y: auto;
 }
 
@@ -52,7 +51,7 @@ main h3 {
   color: #00ff88;
 }
 
-/* ======= BOTÕES SUPERIORES ======= */
+/* ======= BOTÕES ======= */
 .btn-outline-light {
   border-radius: 10px;
   transition: 0.3s;
@@ -82,7 +81,7 @@ main h3 {
   font-weight: 600;
 }
 
-/* ======= PROGRESS BARS ======= */
+/* ======= PROGRESS ======= */
 .progress {
   height: 10px;
   border-radius: 12px;
@@ -95,18 +94,7 @@ main h3 {
   transition: width 0.6s ease;
 }
 
-/* ======= MENSAGEM MOTIVACIONAL ======= */
-.text-warning {
-  color: #f8d210 !important;
-  font-style: italic;
-}
-
-/* ======= GRÁFICO ======= */
-#financeChart {
-  max-height: 300px;
-}
-
-/* ======= SCROLLBAR PERSONALIZADA ======= */
+/* ======= SCROLLBAR ======= */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -117,3 +105,4 @@ main h3 {
 ::-webkit-scrollbar-track {
   background-color: #111;
 }
+  

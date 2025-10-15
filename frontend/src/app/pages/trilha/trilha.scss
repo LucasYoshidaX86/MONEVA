@@ -1,90 +1,141 @@
-/* ======= Layout Base ======= */
+/* ======= RESET ======= */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ======= SIDEBAR ======= */
 .sidebar {
   width: 250px;
+  min-height: 100vh;
   background: linear-gradient(180deg, #007a4d, #003822);
+  transition: all 0.3s ease;
 }
 
 .sidebar h2 {
-  font-weight: 700;
-  margin-bottom: 2rem;
+  letter-spacing: 1px;
 }
 
 .sidebar .nav-link {
-  color: #fff;
-  transition: all 0.2s;
-}
-
-.sidebar .nav-link.active {
-  color: #00ff88 !important;
-  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .sidebar .nav-link:hover {
-  color: #b3ffd6;
-  transform: translateX(5px);
+  background: linear-gradient(90deg, rgba(0,255,136,0.15), transparent);
+  transform: translateX(4px);
 }
 
-/* ======= Trilha ======= */
-.trilha-container {
+.nav-link.active {
+  background: linear-gradient(90deg, rgba(0,255,136,0.15), transparent);
+  font-weight: bold;
+  color: #00ff88 !important;
+  border-left: 4px solid #00ff88;
+  border-radius: 8px 0 0 8px;
+}
+
+
+/* ===== TRILHA VERTICAL ===== */
+.trilha-vertical {
   position: relative;
-  width: 100%;
-  height: 75vh;
-  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  margin-top: 40px;
+  padding-bottom: 80px;
 }
 
-.trilha-linha {
+/* Linha central */
+.linha-vertical {
   position: absolute;
-  width: 100%;
+  top: 0;
+  left: 50%;
+  width: 4px;
   height: 100%;
-  stroke: #00ff88;
-  stroke-width: 2;
-  stroke-dasharray: 6;
+  background: linear-gradient(180deg, #00ff99, #003822);
+  transform: translateX(-50%);
+  z-index: 1;
 }
 
-.trilha-item {
-  position: absolute;
-  text-align: center;
+/* Etapas (nós da trilha) */
+.etapa {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0;
+  z-index: 2;
 }
 
-.trilha-icone {
-  font-size: 2.2rem;
-  color: #00ff88;
-  transition: transform 0.3s, color 0.3s;
+.trilha-icone, .tesouro {
+  font-size: 1.8rem;
+  color: #00ff99;
+  background: rgba(0, 255, 136, 0.1);
+  border: 2px solid rgba(0, 255, 136, 0.5);
+  border-radius: 50%;
+  padding: 12px;
+  transition: all 0.3s ease;
 }
 
-.trilha-item:hover .trilha-icone {
+.etapa:hover .trilha-icone {
   transform: scale(1.2);
-  color: #b3ffd6;
+  box-shadow: 0 0 12px #00ff99;
 }
 
-/* Ícones ativos e especiais */
-.trilha-item.ativo .trilha-icone {
-  color: #00ff88;
-  filter: drop-shadow(0 0 10px #00ff88);
+.tesouro {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  border: none;
+  background: none;
 }
 
+.etapa-label {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* Etapa ativa */
+.etapa.ativo .trilha-icone {
+  background-color: #00ff99;
+  color: #0f1113;
+  box-shadow: 0 0 15px #00ff99;
+}
+
+/* Animação de brilho ✨ */
 .sparkles {
   position: absolute;
   top: -10px;
-  right: -10px;
-  font-size: 1rem;
+  right: -15px;
+  font-size: 1.2rem;
+  animation: brilho 1.5s infinite alternate;
 }
 
-/* Tesouros */
-.tesouro {
-  width: 80px;
-  filter: drop-shadow(0 0 8px #00ff88);
+@keyframes brilho {
+  0% { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.3); }
 }
 
-/* Responsividade */
+/* ===== Responsividade ===== */
 @media (max-width: 768px) {
-  .trilha-container {
-    height: 60vh;
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
   }
-  .trilha-icone {
-    font-size: 1.8rem;
-  }
-  .tesouro {
-    width: 60px;
+
+  .trilha-vertical {
+    width: 100px;
+    margin: 20px auto;
   }
 }
+

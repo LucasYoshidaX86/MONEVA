@@ -1,0 +1,60 @@
+<div class="dashboard">
+  <!-- Sidebar -->
+  <aside class="sidebar d-flex flex-column p-3">
+    <h2 class="fw-bold text-white mb-4">MONEVA</h2>
+    <ul class="nav flex-column">
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white" routerLink="/home">🏠 Home</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white" routerLink="/trilha">💰 Trilha de Aprendizado</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link aside text-white active" routerLink="/demonstrativos">📊 Demonstrativos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" routerLink="/conquistas">🏆 Conquistas</a>
+      </li>
+    </ul>
+  </aside>
+
+
+  <!-- Conteúdo -->
+  <main class="main">
+    <!-- Cabeçalho -->
+    <header class="header">
+      <h1>Painel Financeiro</h1>
+      <div class="saldo">
+        <span>Saldo disponível</span>
+        <strong>R$ 1.900,00</strong>
+      </div>
+    </header>
+
+    <!-- Gráfico -->
+    <section class="chart-section">
+      <div class="chart-container">
+        <canvas id="budgetChart"></canvas>
+        <div class="chart-center">
+          <h3>R$ 2.500,00</h3>
+          <p>Gastos: R$ 600,00</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categorias -->
+    <section class="categories">
+      <div class="category"><div class="icon">🍔</div><p>Alimentação</p></div>
+      <div class="category"><div class="icon">🚗</div><p>Transporte</p></div>
+      <div class="category"><div class="icon">🎮</div><p>Lazer</p></div>
+      <div class="category"><div class="icon">🏠</div><p>Moradia</p></div>
+      <div class="category"><div class="icon">🛍️</div><p>Compras</p></div>
+      <div class="category"><div class="icon">🎓</div><p>Educação</p></div>
+    </section>
+
+    <!-- Botões -->
+    <div class="buttons">
+      <button class="btn add">➕</button>
+      <button class="btn remove">➖</button>
+    </div>
+  </main>
+</div>

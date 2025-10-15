@@ -21,3 +21,21 @@
 .btn-success:hover {
   background: linear-gradient(90deg, #00ff88, #00b37e);
 }
+
+/* Ajustes visuais */
+h4, h5, h6 {
+  color: #00ff88;
+}
+
+p {
+  color: #cfcfcf;
+}
+
+.card p.small {
+  color: #bdbdbd;
+}
+
+main {
+  overflow-y: auto;
+  max-height: 100vh;
+}

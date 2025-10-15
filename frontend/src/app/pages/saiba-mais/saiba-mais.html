@@ -1,70 +1,110 @@
-<div class="container-fluid vh-100 bg-dark text-white p-0 d-flex">
-  <!-- Sidebar -->
-  <aside class="bg-success bg-gradient d-flex flex-column p-3" style="width: 250px;">
-    <h2 class="fw-bold text-white mb-4">MONEVA</h2>
-    <ul class="nav flex-column">
-      <li class="nav-item mb-2">
-        <a class="nav-link text-white" routerLink="/home">🏠 Home</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a class="nav-link text-white active" routerLink="/trilha">💰 Trilha</a>
-      </li>
-    </ul>
-  </aside>
-
+<div class="container-fluid vh-100 bg-dark text-white p-0 d-flex flex-column">
   <!-- Conteúdo -->
   <main class="flex-grow-1 p-5 bg-black">
     <!-- Cabeçalho -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h2 class="fw-bold text-success">O que é o Moneva?</h2>
-        <p class="text-light mb-0">Aprenda conceitos financeiros de forma simples e prática.</p>
+        <p class="text-light mb-0">Aprenda conceitos financeiros de forma simples, prática e gamificada.</p>
       </div>
     </div>
 
-    <!-- Corpo principal -->
+    <!-- Introdução -->
     <div class="card text-white p-4 mb-4" style="background-color:#181c1f">
       <h4 class="mb-3">💡 O que é Educação Financeira?</h4>
       <p>
-        Educação financeira é o processo de adquirir conhecimento sobre como administrar
-        suas finanças pessoais de forma consciente e responsável. Compreender seus gastos,
-        definir metas e investir corretamente são passos fundamentais para alcançar a
-        liberdade financeira.
+        Educação financeira é o processo de aprender a controlar seu dinheiro e usá-lo como ferramenta
+        para atingir seus objetivos. Ela envolve entender como equilibrar gastos, poupar, investir e planejar
+        o futuro com segurança.
       </p>
 
-      <p class="text-success fw-semibold">
+      <p class="text-success fw-semibold fst-italic">
         “Quem entende como o dinheiro funciona, faz o dinheiro trabalhar a seu favor.”
       </p>
     </div>
 
-    <!-- Dica visual -->
+    <!-- Benefícios da Educação Financeira -->
     <div class="row g-4 mb-4">
       <div class="col-md-4">
-        <div class="card text-white text-center p-4 border-success"style="background-color:#181c1f">
+        <div class="card text-white text-center p-4 border-success" style="background-color:#181c1f">
           <h5>💰 Controle de Gastos</h5>
-          <p class="small">Aprenda a monitorar seus gastos e identificar oportunidades de economia.</p>
+          <p class="small">Monitore seus gastos e descubra onde economizar de forma inteligente.</p>
         </div>
       </div>
 
       <div class="col-md-4">
-        <div class="card text-white text-center p-4 border-success"style="background-color:#181c1f">
+        <div class="card text-white text-center p-4 border-success" style="background-color:#181c1f">
           <h5>📈 Planejamento</h5>
-          <p class="small">Crie metas realistas e defina um plano financeiro para alcançá-las.</p>
+          <p class="small">Estabeleça metas claras e siga um plano financeiro adaptado à sua realidade.</p>
         </div>
       </div>
 
       <div class="col-md-4">
-        <div class="card text-white text-center p-4 border-success"style="background-color:#181c1f">
+        <div class="card text-white text-center p-4 border-success" style="background-color:#181c1f">
           <h5>🏦 Investimentos</h5>
-          <p class="small">Descubra como fazer seu dinheiro render de forma segura e inteligente.</p>
+          <p class="small">Aprenda como investir seu dinheiro com segurança e aumentar seu patrimônio.</p>
         </div>
       </div>
     </div>
 
-    <!-- Botão de continuidade -->
-    <div class="text-center mt-4">
+    <!-- Nova seção: Como o Moneva te ajuda -->
+    <div class="card text-white p-4 mb-4" style="background-color:#181c1f">
+      <h4 class="mb-3">🚀 Como o Moneva te ajuda</h4>
+      <p>
+        O Moneva transforma o aprendizado financeiro em uma experiência envolvente e divertida.
+        Através de trilhas interativas e desafios gamificados, você aprende sobre orçamento,
+        investimentos e planejamento enquanto aplica o conhecimento na prática.
+      </p>
+
+      <div class="row mt-3">
+        <div class="col-md-6 mb-3">
+          <div class="d-flex align-items-start">
+            <span class="me-3 fs-3 text-success">🎯</span>
+            <div>
+              <h6 class="fw-bold text-success">Trilhas de Aprendizado</h6>
+              <p class="small mb-0">Acompanhe módulos curtos e diretos sobre temas financeiros essenciais.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="d-flex align-items-start">
+            <span class="me-3 fs-3 text-success">💎</span>
+            <div>
+              <h6 class="fw-bold text-success">Sistema de Recompensas</h6>
+              <p class="small mb-0">Ganhe conquistas e pontos conforme evolui nas trilhas de conhecimento.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="d-flex align-items-start">
+            <span class="me-3 fs-3 text-success">📊</span>
+            <div>
+              <h6 class="fw-bold text-success">Gestor Inteligente</h6>
+              <p class="small mb-0">Controle receitas e despesas com gráficos e relatórios dinâmicos.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="d-flex align-items-start">
+            <span class="me-3 fs-3 text-success">🤝</span>
+            <div>
+              <h6 class="fw-bold text-success">Aprendizado Colaborativo</h6>
+              <p class="small mb-0">Compartilhe progresso e aprenda com a comunidade Moneva.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rodapé inspiracional -->
+    <div class="text-center mt-5 mb-3">
+      <h4 class="fw-bold text-success mb-2">💼 Transforme sua relação com o dinheiro!</h4>
+      <p class="text-light mb-4">
+        Comece agora a construir uma vida financeira equilibrada e conquiste sua liberdade econômica.
+      </p>
+
       <button class="btn btn-success btn-lg rounded-pill px-5" routerLink="/login">
-        🚀 Começar Aprendizado
+        🧠 Começar Aprendizado
       </button>
     </div>
   </main>
