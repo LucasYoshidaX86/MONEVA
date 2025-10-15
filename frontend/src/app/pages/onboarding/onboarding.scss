@@ -1,0 +1,7 @@
+.stepper { display:flex; gap:8px; }
+.step {
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:#2a2f35; color:#9fb0ba; font-weight:700;
+  &.is-active { background:#00c053; color:#0f1113; }
+}

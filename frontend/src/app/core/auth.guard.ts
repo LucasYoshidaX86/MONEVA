@@ -1,14 +1,20 @@
+// src/app/core/auth.guard.ts
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from './auth.service';
-import { map, tap } from 'rxjs/operators';
+import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 
-export const authGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+export const authGuard: CanActivateFn = async () => {
+  const afAuth = inject(Auth);
   const router = inject(Router);
 
-  return auth.isLoggedIn$().pipe(
-    tap(ok => { if (!ok) router.navigateByUrl('/'); }),
-    map(ok => ok)
-  );
+  // pega o usuário atual ou espera a primeira emissão do onAuthStateChanged
+  const user = afAuth.currentUser ?? await new Promise<User | null>((resolve) => {
+    const unsub = onAuthStateChanged(afAuth, (u) => { resolve(u); unsub(); });
+  });
+
+  if (!user) {
+    router.navigateByUrl('/');
+    return false;
+  }
+  return true;
 };

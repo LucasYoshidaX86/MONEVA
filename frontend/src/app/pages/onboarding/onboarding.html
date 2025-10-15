@@ -1,0 +1,95 @@
+<div class="container text-light py-4">
+  <h2 class="mb-3">Bem-vindo! Vamos personalizar sua experiência</h2>
+  <p class="text-muted mb-4">Preencha as etapas abaixo. Leva menos de 2 minutos.</p>
+
+  @if (errorMsg) {
+    <div class="alert alert-warning">{{ errorMsg }}</div>
+  }
+
+  <!-- Stepper -->
+  <div class="stepper mb-4">
+    <div class="step" [class.is-active]="step>=1">1</div>
+    <div class="step" [class.is-active]="step>=2">2</div>
+    <div class="step" [class.is-active]="step>=3">3</div>
+    <div class="step" [class.is-active]="step>=4">4</div>
+  </div>
+
+  <!-- 🔻 Envolvemos tudo com formGroup -->
+  <form [formGroup]="form" (ngSubmit)="next()">
+
+    @if (step === 1) {
+      <section class="card p-3 mb-3 bg-dark-subtle border-0">
+        <h5 class="mb-3">Sobre você</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Gênero</label>
+            <select class="form-select" formControlName="gender">
+              <option value="" disabled>Selecione...</option>
+              <option value="masculino">Masculino</option>
+              <option value="feminino">Feminino</option>
+              <option value="outro">Outro</option>
+              <option value="prefiro_nao_dizer">Prefiro não dizer</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Renda mensal (R$)</label>
+            <input type="number" class="form-control" formControlName="monthlyIncome" min="0">
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (step === 2) {
+      <section class="card p-3 mb-3 bg-dark-subtle border-0">
+        <h5 class="mb-3">Objetivos e sonhos</h5>
+        <div class="mb-3">
+          <label class="form-label">Objetivos de vida</label>
+          <textarea class="form-control" rows="2" formControlName="lifeGoals"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Objetivos financeiros</label>
+          <textarea class="form-control" rows="2" formControlName="financialGoals"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Sonhos que deseja realizar</label>
+          <textarea class="form-control" rows="2" formControlName="dreams"></textarea>
+        </div>
+      </section>
+    }
+
+    @if (step === 3) {
+      <section class="card p-3 mb-3 bg-dark-subtle border-0">
+        <h5 class="mb-3">Sua realidade financeira hoje</h5>
+        <div class="mb-3">
+          <label class="form-label">Dores (o que mais te atrapalha?)</label>
+          <textarea class="form-control" rows="3" formControlName="pains"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Situação atual</label>
+          <select class="form-select" formControlName="currentStatus">
+            <option value="" disabled>Selecione...</option>
+            <option value="devendo">Devendo</option>
+            <option value="sem_economia">Não consigo economizar</option>
+            <option value="equilibrado">Equilibrado</option>
+            <option value="investindo">Já invisto</option>
+          </select>
+        </div>
+      </section>
+    }
+
+    @if (step === 4) {
+      <section class="card p-3 mb-3 bg-dark-subtle border-0">
+        <h5 class="mb-3">Confirmação</h5>
+        <p class="mb-2">Revise as suas respostas. Você poderá editá-las depois no perfil.</p>
+      </section>
+    }
+
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-outline-light" (click)="prev()" [disabled]="step===1">Voltar</button>
+      <button type="submit" class="btn btn-success ms-auto" [disabled]="loading">
+        {{ step < 4 ? 'Continuar' : (loading ? 'Salvando...' : 'Concluir') }}
+      </button>
+    </div>
+  </form>
+</div>

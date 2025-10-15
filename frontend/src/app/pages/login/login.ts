@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators, ValidationErrors, AbstractControl, FormGroup } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { UserProfileService } from '../../core/user-profile.service';
 
 @Component({
   selector: 'app-login',
@@ -15,12 +16,12 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private userProfile = inject(UserProfileService);
 
-  mode: 'login' | 'register' = 'register';
+  mode: 'login' | 'register' = 'login';
   loading = false;
   errorMsg = '';
 
-  // controles de exibição da senha
   showLoginPass = false;
   showRegPass = false;
   showRegPass2 = false;
@@ -43,19 +44,31 @@ export class LoginComponent {
 
   switch(m:'login'|'register'){ this.mode = m; this.errorMsg = ''; }
 
+  private async redirectAfterAuth() {
+    const profile = await this.userProfile.getProfile();
+    if (!profile || !profile.completedOnboarding) {
+      await this.router.navigateByUrl('/onboarding');
+    } else {
+      await this.router.navigateByUrl('/home');
+    }
+  }
+
   async submitLogin() {
     this.errorMsg = '';
     if (this.loginForm.invalid) return;
     this.loading = true;
+    // dentro do submitLogin e submitRegister
     try {
-      const { email, password } = this.loginForm.value;
-      await this.auth.login(email!, password!);
-      this.router.navigateByUrl('/home');
-    } catch (e:any) {
-      console.error('Login error:', e);
-      this.errorMsg = this.translateFirebaseError(e?.code);
-    } finally {
-      this.loading = false;
+      const profile = await this.userProfile.getProfile();
+      if (!profile || !profile.completedOnboarding) {
+        this.router.navigateByUrl('/onboarding');
+      } else {
+        this.router.navigateByUrl('/home');
+      }
+    } catch (err) {
+      console.warn('Falha ao ler perfil, seguindo para onboarding por segurança.', err);
+      // Não trave o login: encaminhe para onboarding
+      this.router.navigateByUrl('/onboarding');
     }
   }
 
@@ -63,15 +76,18 @@ export class LoginComponent {
     this.errorMsg = '';
     if (this.registerForm.invalid || this.registerForm.errors?.['passwordMismatch']) return;
     this.loading = true;
+    // dentro do submitLogin e submitRegister
     try {
-      const { name, email, password } = this.registerForm.value;
-      await this.auth.register({ name: name!, email: email!, password: password! });
-      this.router.navigateByUrl('/home');
-    } catch (e:any) {
-      console.error('Register error:', e);
-      this.errorMsg = this.translateFirebaseError(e?.code);
-    } finally {
-      this.loading = false;
+      const profile = await this.userProfile.getProfile();
+      if (!profile || !profile.completedOnboarding) {
+        this.router.navigateByUrl('/onboarding');
+      } else {
+        this.router.navigateByUrl('/home');
+      }
+    } catch (err) {
+      console.warn('Falha ao ler perfil, seguindo para onboarding por segurança.', err);
+      // Não trave o login: encaminhe para onboarding
+      this.router.navigateByUrl('/onboarding');
     }
   }
 
