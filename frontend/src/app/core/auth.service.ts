@@ -5,10 +5,12 @@ import {
   browserLocalPersistence, onAuthStateChanged, User
 } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
+import { UserProfileService } from './user-profile.service'; // <-- importe
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
+  private profileSvc = inject(UserProfileService); // <-- injete
 
   constructor() {
     setPersistence(this.auth, browserLocalPersistence);
@@ -21,6 +23,10 @@ export class AuthService {
   async register(data: { name: string; email: string; password: string }): Promise<User> {
     const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
     await updateProfile(cred.user, { displayName: data.name });
+
+    // (opcional recomendado) grava/atualiza no Firestore também:
+    await this.profileSvc.upsertProfile({ displayName: data.name });
+
     return cred.user;
   }
 
@@ -29,13 +35,8 @@ export class AuthService {
     return res.user;
   }
 
-  resetPassword(email: string) {
-    return sendPasswordResetEmail(this.auth, email);
-  }
-
-  logout() {
-    return this.auth.signOut();
-  }
+  resetPassword(email: string) { return sendPasswordResetEmail(this.auth, email); }
+  logout() { return this.auth.signOut(); }
 
   authState$(): Observable<User | null> {
     return new Observable<User | null>((observer) => {

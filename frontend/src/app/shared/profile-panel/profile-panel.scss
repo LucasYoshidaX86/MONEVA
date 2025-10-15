@@ -1,0 +1,151 @@
+/* Paleta alinhada ao seu tema */
+:root {
+  --bg-900: #0f1113;
+  --bg-850: #121518;
+  --bg-800: #1a1d20;
+  --bg-700: #202428;
+  --text:   #f1f5f9;
+  --muted:  #a7b0b7;
+  --green:  #00c053;
+}
+
+/* Backdrop */
+.panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1040;
+}
+
+/* Painel oval direito flutuante */
+.profile-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: 380px;
+  max-width: 92vw;
+  background: radial-gradient(100% 100% at 30% 0%, #171a1d, #0f1113);
+  color: var(--text);
+  z-index: 1050;
+  border: 1px solid rgba(0, 192, 83, 0.25);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.55),
+    0 0 0 6px rgba(0, 192, 83, 0.08);
+  padding: 18px 18px 22px 24px;
+
+  /* “Oval vertical” → cantos muito arredondados à esquerda */
+  border-radius: 50px 12px 12px 50px;
+
+  display: flex;
+  flex-direction: column;
+
+  /* Slide-in */
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform .32s ease, opacity .32s ease;
+
+  &.is-open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.pp-header {
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--bg-700);
+  display: grid; place-items: center;
+  font-weight: 800;
+  color: #00c053;
+  border: 1px solid #19d07d33;
+  box-shadow: 0 2px 8px #00c053;
+}
+
+.pp-name { font-size: 1.05rem; letter-spacing: .2px; color: white;}
+.pp-email { color: white; }
+
+.pp-close {
+  border: 1px solid #00c053;
+  background: transparent;
+  color: #00c053;
+  font-size: 1rem;
+  line-height: 1;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  transition: background .2s ease;
+  &:hover { background: #00c053; color: white; border: 1px solid #101315;}
+}
+
+/* Body */
+.pp-body {
+  overflow: auto;
+  padding-right: 6px; /* respiro para não grudar no canto curvo */
+}
+
+.pp-section { 
+  background: var(--bg-800);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 16px;
+  padding: 14px 14px 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.28);
+}
+
+.pp-title {
+  margin: 0 0 10px 0;
+  color: #dce3e9;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+
+/* Linhas de info */
+.pp-list {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: grid; gap: 8px;
+}
+.pp-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #1e2327;
+}
+.pp-label { color: white; }
+.pp-value { font-weight: 600; color: #1eb461;}
+
+/* Conquistas */
+.pp-achievements {
+  display: grid;
+  gap: 6px;
+}
+.pp-progress {
+  height: 10px;
+  background: #101315;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.pp-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #05c864, #00a34a);
+  width: 0%;
+  transition: width .35s ease;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .profile-panel {
+    top: 8px; right: 8px; bottom: 8px;
+    width: 92vw;
+    border-radius: 24px;
+  }
+}

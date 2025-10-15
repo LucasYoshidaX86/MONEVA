@@ -1,0 +1,96 @@
+<!-- Backdrop (fecha ao clicar fora) -->
+<div class="panel-backdrop" *ngIf="open" (click)="onClose()"></div>
+
+<!-- Painel direito -->
+<aside class="profile-panel" [class.is-open]="open" role="dialog" aria-modal="true" aria-label="Perfil">
+  <header class="pp-header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <div class="avatar">{{ displayName()[0] | uppercase }}</div>
+      <div class="d-flex flex-column">
+        <strong class="pp-name">{{ displayName() }}</strong>
+        <small class="pp-email">{{ email() }}</small>
+      </div>
+    </div>
+    <button class="pp-close" (click)="onClose()" aria-label="Fechar painel">✕</button>
+  </header>
+
+  <section class="pp-body">
+    <div class="pp-section">
+      <h6 class="pp-title">Informações Pessoais</h6>
+      <ul class="pp-list">
+        <li>
+          <span class="pp-label">Nome</span>
+          <span class="pp-value">{{ (profileSig()?.displayName || displayName()) }}</span>
+        </li>
+        <li>
+          <span class="pp-label">Gênero</span>
+          <span class="pp-value">
+            {{
+              (profileSig()?.gender === 'masculino' && 'Masculino') ||
+              (profileSig()?.gender === 'feminino' && 'Feminino') ||
+              (profileSig()?.gender === 'outro' && 'Outro') ||
+              (profileSig()?.gender === 'prefiro_nao_dizer' && 'Prefiro não dizer') ||
+              '—'
+            }}
+          </span>
+        </li>
+        <li>
+          <span class="pp-label">Renda mensal</span>
+          <span class="pp-value">
+            {{ profileSig()?.monthlyIncome != null ? ('R$ ' + (profileSig()?.monthlyIncome | number:'1.0-0')) : '—' }}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="pp-section">
+      <h6 class="pp-title">Objetivos e Sonhos</h6>
+      <ul class="pp-list">
+        <li>
+          <span class="pp-label">Objetivos de vida</span>
+          <span class="pp-value">{{ profileSig()?.lifeGoals || '—' }}</span>
+        </li>
+        <li>
+          <span class="pp-label">Objetivos financeiros</span>
+          <span class="pp-value">{{ profileSig()?.financialGoals || '—' }}</span>
+        </li>
+        <li>
+          <span class="pp-label">Sonhos</span>
+          <span class="pp-value">{{ profileSig()?.dreams || '—' }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="pp-section">
+      <h6 class="pp-title">Situação Atual</h6>
+      <ul class="pp-list">
+        <li>
+          <span class="pp-label">Dores</span>
+          <span class="pp-value">{{ profileSig()?.pains || '—' }}</span>
+        </li>
+        <li>
+          <span class="pp-label">Status financeiro</span>
+          <span class="pp-value">
+            {{
+              (profileSig()?.currentStatus === 'devendo' && 'Devendo') ||
+              (profileSig()?.currentStatus === 'sem_economia' && 'Não consegue economizar') ||
+              (profileSig()?.currentStatus === 'equilibrado' && 'Equilibrado') ||
+              (profileSig()?.currentStatus === 'investindo' && 'Já investindo') ||
+              '—'
+            }}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="pp-section">
+      <h6 class="pp-title">Conquistas</h6>
+      <div class="pp-achievements">
+        <div class="pp-progress">
+          <div class="pp-progress-bar" [style.width.%]="(achievements()/achievementsGoal) * 100"></div>
+        </div>
+        <small>{{ achievements() }} / {{ achievementsGoal }}</small>
+      </div>
+    </div>
+  </section>
+</aside>
