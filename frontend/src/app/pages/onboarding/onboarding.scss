@@ -1,12 +1,42 @@
+:root {
+  --bg-900: #0f1113;
+  --bg-800: #1a1d20;
+  --bg-700: #202428;
+  --text: #f1f5f9;
+  --muted: #a7b0b7;
+  --green: #00c053;     // cor do botão
+  --green-strong: #00C053;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: radial-gradient(1000px 600px at 100% 100%, #00C053, #0f1113);
+  color: var(--text);
+}
+
+// Bolinhas de progressão no Formulário
+
+// Disposição das Bolinhas
 .stepper { 
   display:flex; 
   gap:8px; 
 }
 
-
+// Design das bolinhas
 .step {
-  width:32px; height:32px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  background:#2a2f35; color:#9fb0ba; font-weight:700;
-  &.is-active { background:#00c053; color:#0f1113; }
+  width:32px; 
+  height:32px; 
+  border-radius:50%;
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  background:#2a2f35;
+  color:#ffffff; 
+  font-weight:700; &.is-active { background:#00c053; color:#0f1113; }
+}
+
+.formulario{
+ color:#0f1113;
+ background-color: #262a2f;
 }

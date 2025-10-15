@@ -18,7 +18,6 @@
     </ul>
   </aside>
 
-
   <!-- Conteúdo -->
   <main class="main">
     <!-- Cabeçalho -->
@@ -26,7 +25,7 @@
       <h1>Painel Financeiro</h1>
       <div class="saldo">
         <span>Saldo disponível</span>
-        <strong>R$ 1.900,00</strong>
+        <strong>R$ {{ saldoDisponivel | number:'1.2-2' }}</strong>
       </div>
     </header>
 
@@ -35,20 +34,43 @@
       <div class="chart-container">
         <canvas id="budgetChart"></canvas>
         <div class="chart-center">
-          <h3>R$ 2.500,00</h3>
-          <p>Gastos: R$ 600,00</p>
+          <h3>R$ {{ saldoDisponivel + gastos | number:'1.2-2' }}</h3>
+          <p>Gastos: R$ {{ gastos | number:'1.2-2' }}</p>
         </div>
       </div>
     </section>
 
     <!-- Categorias -->
     <section class="categories">
-      <div class="category"><div class="icon">🍔</div><p>Alimentação</p></div>
-      <div class="category"><div class="icon">🚗</div><p>Transporte</p></div>
-      <div class="category"><div class="icon">🎮</div><p>Lazer</p></div>
-      <div class="category"><div class="icon">🏠</div><p>Moradia</p></div>
-      <div class="category"><div class="icon">🛍️</div><p>Compras</p></div>
-      <div class="category"><div class="icon">🎓</div><p>Educação</p></div>
+      @for (categoria of categorias; track $index) {
+        <div class="category">
+          <div class="icon">{{ categoria.emoji }}</div>
+          <p>{{ categoria.nome }}</p>
+        </div>
+      }
+    </section>
+
+    <!-- Histórico de transações -->
+    <section class="transactions mt-5 w-100" style="max-width: 800px;">
+      <h4 class="text-success mb-3">Histórico de Transações</h4>
+
+      @if (transacoes.length > 0) {
+        <ul class="list-group bg-transparent">
+          @for (t of transacoes; track $index) {
+            <li class="list-group-item bg-transparent text-white border-success d-flex justify-content-between align-items-center">
+              <span>
+                <strong>{{ t.tipo === 'entrada' ? '💰' : '💸' }}</strong> 
+                {{ t.categoria }}
+              </span>
+              <span [ngClass]="t.tipo === 'entrada' ? 'text-success' : 'text-danger'">
+                {{ t.tipo === 'entrada' ? '+' : '-' }}R$ {{ t.valor }}
+              </span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="text-secondary">Nenhuma transação registrada ainda.</p>
+      }
     </section>
 
     <!-- Botões -->

@@ -20,6 +20,8 @@ export const routes: Routes = [
   // Onboarding obrigatório logo após login/cadastro
   { path: 'onboarding', component: OnboardingComponent, canActivate: [authGuard, skipOnboardingGuard] },
 
+  { path: 'onboarding-dev', component: OnboardingComponent },
+
   // Home e Trilha só depois de concluir o onboarding
   { path: 'home', component: Home, canActivate: [authGuard, onboardingGuard] },
   { path: 'trilha', component: Trilha, canActivate: [authGuard, onboardingGuard] },
