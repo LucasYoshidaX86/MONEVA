@@ -57,6 +57,102 @@ main h3 {
   transition: 0.3s;
 }
 
+/* ===========================
+   Botão "Perfil" – estilo Figma (pílula + avatar com duplo-anel)
+   =========================== */
+
+.profile-cta {
+  --pill-bg: #143024;          /* fundo verde-escuro da pílula */
+  --pill-bg-hover: #153a29;    /* hover da pílula */
+  --ring-green: #00e070;       /* anel externo */
+  --ring-white: #ffffff;       /* anel interno */
+
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 8px 12px 8px 16px;
+  background: var(--pill-bg);
+  color: #f1f5f9;
+  border: none;
+  border-radius: 14px;         /* formato de pílula */
+  cursor: pointer;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 6px 16px rgba(0,0,0,.35);
+  transition: background .18s ease, transform .08s ease, box-shadow .18s ease;
+  line-height: 1;
+}
+
+.profile-cta:hover {
+  background: var(--pill-bg-hover);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 8px 20px rgba(0,0,0,.45);
+}
+
+.profile-cta:active { transform: translateY(1px); }
+
+.profile-cta:focus-visible {
+  outline: 2px solid rgba(0, 208, 115, .75);
+  outline-offset: 2px;
+}
+
+.profile-cta__label {
+  font-weight: 600;
+  letter-spacing: .2px;
+  color: #dfe7ec;
+}
+
+/* Avatar circular com duplo anel */
+.profile-cta__avatar {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(120% 120% at 30% 0%, #1a1f23, #0f1113);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  margin-left: 2px;
+}
+
+.profile-cta__avatar::before {
+  content: '';
+  position: absolute;
+  inset: -2px;                       /* cria o anel externo */
+  border-radius: 50%;
+  border: 2px solid var(--ring-green);
+  box-shadow: 0 0 8px rgba(0, 224, 112, .55), 0 0 0 2px rgba(0,0,0,.25) inset;
+}
+
+.profile-cta__avatar::after {
+  content: '';
+  position: absolute;
+  inset: 4px;                        /* anel interno branco */
+  border-radius: 50%;
+  border: 2px solid var(--ring-white);
+  opacity: .95;
+}
+
+.profile-cta__avatar > .bi {
+  font-size: 1.05rem;
+  z-index: 1;                        /* acima dos anéis */
+}
+
+.profile-cta:hover .profile-cta__avatar::before {
+  box-shadow: 0 0 10px rgba(0, 224, 112, .75), 0 0 0 2px rgba(0,0,0,.25) inset;
+}
+
+/* Responsivo (opcional) */
+@media (max-width: 576px) {
+  .profile-cta { padding: 7px 10px 7px 12px; gap: 10px; border-radius: 12px; }
+  .profile-cta__avatar { width: 30px; height: 30px; }
+  .profile-cta__avatar::after { inset: 3.5px; }
+}
+
+
 .btn-outline-light:hover {
   background-color: #00ff88;
   color: #000;
@@ -105,4 +201,3 @@ main h3 {
 ::-webkit-scrollbar-track {
   background-color: #111;
 }
-  

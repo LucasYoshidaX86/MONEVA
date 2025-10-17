@@ -88,6 +88,83 @@
   padding-right: 6px; /* respiro para não grudar no canto curvo */
 }
 
+/* ===========================
+   Scrollbar do painel (tema MONEVA)
+   - WebKit (Chrome / Edge / Safari)
+   - Firefox
+   =========================== */
+
+/* Cores configuráveis */
+:root {
+  --scroll-thumb: linear-gradient(180deg, #06d86b, #00a34a);
+  --scroll-thumb-hover: linear-gradient(180deg, #10e078, #00b454);
+  --scroll-thumb-active: linear-gradient(180deg, #0bd06f, #009e44);
+  --scroll-track: #0f1316;          /* trilho */
+  --scroll-track-border: rgba(0, 192, 83, .18);
+}
+
+/* Área rolável do painel */
+.pp-body {
+  overflow: auto;
+  padding-right: 6px;
+  scrollbar-gutter: stable;            /* evita "pulos" quando a barra aparece */
+
+  /* iOS/Mobile: rolagem com inércia */
+  -webkit-overflow-scrolling: touch;
+
+  /* --- Firefox --- */
+  scrollbar-width: thin;               /* thin | auto | none */
+  scrollbar-color: #10d56f #0f1316;    /* thumb | track */
+}
+
+/* --- WebKit (Chrome/Edge/Safari) --- */
+.pp-body::-webkit-scrollbar {
+  width: 10px;                         /* largura (vertical) */
+}
+
+.pp-body::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+  border-left: 1px solid var(--scroll-track-border);
+  border-radius: 10px;
+}
+
+.pp-body::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border: 2px solid #0e1215;           /* cria "canaleta" e dá contraste */
+  border-radius: 10px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,.35),
+              0 0 8px rgba(0, 192, 83, .25);
+}
+
+.pp-body::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+  box-shadow: inset 0 0 4px rgba(0,0,0,.35),
+              0 0 10px rgba(0, 192, 83, .35);
+}
+
+.pp-body::-webkit-scrollbar-thumb:active {
+  background: var(--scroll-thumb-active);
+}
+
+/* Canto do scroll (quando existe) */
+.pp-body::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Remove "botões" do scroll (raros hoje em dia) */
+.pp-body::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* --- Acabamento: fade nas bordas superior/inferior --- */
+/* dá uma leve máscara nas extremidades do conteúdo para ficar mais "premium" */
+.pp-body {
+  /* “fade” transparente nas bordas top/bottom */
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,1) 14px, rgba(0,0,0,1) calc(100% - 14px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,1) 14px, rgba(0,0,0,1) calc(100% - 14px), transparent 100%);
+}
+
+
 .pp-section { 
   background: var(--bg-800);
   border: 1px solid rgba(255,255,255,.06);

@@ -20,6 +20,8 @@ export class Home implements OnDestroy {
 
   openProfile()  { this.showProfile.set(true); }
   closeProfile() { this.showProfile.set(false); }
+  toggleProfile(){ this.showProfile.update(v => !v); }
+
 
   /** Nome que será exibido no “Fala Aí, …!” */
   firstName = signal<string>('Usuário');
