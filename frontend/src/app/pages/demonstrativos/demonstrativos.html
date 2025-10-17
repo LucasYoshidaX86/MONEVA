@@ -1,82 +1,152 @@
-<div class="dashboard">
-  <!-- Sidebar -->
+<!-- src/app/pages/demonstrativos/demonstrativos.html -->
+<div class="board">
+  <!-- ======= Sidebar (mantida como no restante do app) ======= -->
   <aside class="sidebar d-flex flex-column p-3">
     <h2 class="fw-bold text-white mb-4">MONEVA</h2>
     <ul class="nav flex-column">
-      <li class="nav-item mb-2">
-        <a class="nav-link text-white" routerLink="/home">🏠 Home</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a class="nav-link text-white" routerLink="/trilha">💰 Trilha de Aprendizado</a>
-      </li>
-      <li class="nav-item mb-2">
-        <a class="nav-link aside text-white active" routerLink="/demonstrativos">📊 Demonstrativos</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-white" routerLink="/conquistas">🏆 Conquistas</a>
-      </li>
+      <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/home">🏠 Home</a></li>
+      <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/trilha">💰 Trilha de Aprendizado</a></li>
+      <li class="nav-item mb-2"><a class="nav-link aside text-white active" routerLink="/demonstrativos">📊 Demonstrativos</a></li>
+      <li class="nav-item"><a class="nav-link text-white" routerLink="/conquistas">🏆 Conquistas</a></li>
     </ul>
   </aside>
 
-  <!-- Conteúdo -->
+  <!-- ======= Conteúdo ======= -->
   <main class="main">
-    <!-- Cabeçalho -->
-    <header class="header">
-      <h1>Painel Financeiro</h1>
-      <div class="saldo">
-        <span>Saldo disponível</span>
-        <strong>R$ {{ saldoDisponivel | number:'1.2-2' }}</strong>
+
+    <!-- Topbar estilo Monefy -->
+    <header class="topbar">
+      <button class="icon-btn" (click)="mudarMes(-1)"><i class="bi bi-chevron-left"></i></button>
+
+      <div class="brand">
+        <div class="logo">Moneva</div>
+        <small class="muted">Todas as contas</small>
+      </div>
+
+      <div class="month">{{ nomeMes() }}</div>
+
+      <div class="actions">
+        <button class="icon-btn"><i class="bi bi-funnel"></i></button>
+        <button class="icon-btn"><i class="bi bi-search"></i></button>
+        <button class="icon-btn" (click)="mudarMes(1)"><i class="bi bi-chevron-right"></i></button>
+        <button class="icon-btn"><i class="bi bi-three-dots-vertical"></i></button>
       </div>
     </header>
 
-    <!-- Gráfico -->
-    <section class="chart-section">
-      <div class="chart-container">
-        <canvas id="budgetChart"></canvas>
-        <div class="chart-center">
-          <h3>R$ {{ saldoDisponivel + gastos | number:'1.2-2' }}</h3>
-          <p>Gastos: R$ {{ gastos | number:'1.2-2' }}</p>
+    <!-- Anel central + Percentuais ao redor -->
+    <section class="ring-area">
+      <div class="ring-wrap">
+        <canvas id="ringChart"></canvas>
+
+        <!-- Centro do anel -->
+        <div class="ring-center">
+          <div class="in-label green">R$ {{ totalEntradas | number:'1.2-2' }}</div>
+          <div class="out-label red">R$ {{ totalSaidas | number:'1.2-2' }}</div>
+        </div>
+
+        <!-- “Balõezinhos” de % ao redor do anel -->
+        <div class="orbit">
+          @for (g of gastosPorCategoria; track g.nome; let i = $index) {
+            <div class="bubble" [style.--i]="i" [style.--n]="gastosPorCategoria.length">
+              <span class="pct">{{ g.pct }}%</span>
+              <span class="emoji">{{ g.emoji }}</span>
+            </div>
+          }
         </div>
       </div>
     </section>
 
-    <!-- Categorias -->
-    <section class="categories">
-      @for (categoria of categorias; track $index) {
-        <div class="category">
-          <div class="icon">{{ categoria.emoji }}</div>
-          <p>{{ categoria.nome }}</p>
+    <!-- Barra de saldo -->
+    <section class="saldo-bar">
+      <div class="saldo-chip">
+        <span>Saldo</span>
+        <strong>R$ {{ saldo | number:'1.2-2' }}</strong>
+      </div>
+    </section>
+
+    <!-- Histórico simples (opcional) -->
+    <section class="history">
+      @for (t of transacoes; track t.id) {
+        <div class="rowi">
+          <div class="left">
+            <div class="cat">{{ t.categoria }}</div>
+            <small class="muted">{{ t.meio | titlecase }} • {{ t.data | date:'dd/MM' }}</small>
+          </div>
+          <div class="right" [class.in]="t.tipo==='entrada'" [class.out]="t.tipo==='saida'">
+            {{ t.tipo==='entrada' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
+          </div>
+          <button class="trash" (click)="confirmarExcluir(t.id)"><i class="bi bi-trash"></i></button>
         </div>
       }
     </section>
 
-    <!-- Histórico de transações -->
-    <section class="transactions mt-5 w-100" style="max-width: 800px;">
-      <h4 class="text-success mb-3">Histórico de Transações</h4>
-
-      @if (transacoes.length > 0) {
-        <ul class="list-group bg-transparent">
-          @for (t of transacoes; track $index) {
-            <li class="list-group-item bg-transparent text-white border-success d-flex justify-content-between align-items-center">
-              <span>
-                <strong>{{ t.tipo === 'entrada' ? '💰' : '💸' }}</strong> 
-                {{ t.categoria }}
-              </span>
-              <span [ngClass]="t.tipo === 'entrada' ? 'text-success' : 'text-danger'">
-                {{ t.tipo === 'entrada' ? '+' : '-' }}R$ {{ t.valor }}
-              </span>
-            </li>
-          }
-        </ul>
-      } @else {
-        <p class="text-secondary">Nenhuma transação registrada ainda.</p>
-      }
-    </section>
-
-    <!-- Botões -->
-    <div class="buttons">
-      <button class="btn add">➕</button>
-      <button class="btn remove">➖</button>
+    <!-- Botões flutuantes gigantes -->
+    <div class="fab-bar">
+      <button class="fab minus" (click)="abrirAdd('saida')">−</button>
+      <button class="fab plus"  (click)="abrirAdd('entrada')">+</button>
     </div>
   </main>
 </div>
+
+<!-- ===== Modal Adicionar ===== -->
+@if (showAdd()) {
+  <div class="modal">
+    <div class="modal-card">
+      <h5 class="mb-2">{{ novo.tipo==='entrada' ? 'Nova Entrada' : 'Nova Despesa' }}</h5>
+
+      <div class="grid">
+        <label>Data
+          <input
+          type="date"
+          [value]="dateToInput(novo.data)"
+          (change)="onDateChange($event)" />
+        </label>
+
+        <label>Meio
+          <select [(ngModel)]="novo.meio">
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="debito">Débito</option>
+            <option value="credito">Crédito</option>
+            <option value="boleto">Boleto</option>
+            <option value="outro">Outro</option>
+          </select>
+        </label>
+
+        <label>Categoria
+          <select [(ngModel)]="novo.categoria">
+            @for (c of categorias; track c.nome) {
+              <option [value]="c.nome">{{ c.emoji }} {{ c.nome }}</option>
+            }
+          </select>
+        </label>
+
+        <label>Valor (R$)
+          <input type="number" step="0.01" min="0" [(ngModel)]="novo.valor" />
+        </label>
+
+        <label class="full">Observação
+          <input type="text" [(ngModel)]="novo.obs" />
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn ghost" (click)="fecharAdd()">Cancelar</button>
+        <button class="btn solid" (click)="salvarTransacao()">Salvar</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ===== Modal de Confirmação ===== -->
+@if (showConfirm().open) {
+  <div class="modal">
+    <div class="modal-card confirm">
+      <p>Deseja realmente excluir esta transação?</p>
+      <div class="modal-actions">
+        <button class="btn ghost" (click)="cancelarExcluir()">Cancelar</button>
+        <button class="btn danger" (click)="excluirConfirmado()">Excluir</button>
+      </div>
+    </div>
+  </div>
+}
