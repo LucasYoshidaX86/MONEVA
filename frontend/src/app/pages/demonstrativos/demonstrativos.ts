@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import Chart from 'chart.js/auto';
+import { Chart } from 'chart.js/auto';
+import { RouterLink } from '@angular/router';
 
 type Tipo = 'entrada' | 'saida';
 type Meio = 'dinheiro' | 'pix' | 'debito' | 'credito' | 'boleto' | 'outro';
@@ -28,7 +29,7 @@ interface CategoriaCfg {
 @Component({
   selector: 'app-demonstrativos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './demonstrativos.html',
   styleUrl: './demonstrativos.scss'
 })
@@ -226,4 +227,6 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
     const nomes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
     return `${nomes[this.mes()]} ${this.ano()}`;
   }
+
+  
 }

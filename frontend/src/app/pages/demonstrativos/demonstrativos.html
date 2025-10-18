@@ -14,22 +14,22 @@
   <!-- ======= Conteúdo ======= -->
   <main class="main">
 
-    <!-- Topbar estilo Monefy -->
+    <!-- Topbar -->
     <header class="topbar">
-      <button class="icon-btn" (click)="mudarMes(-1)"><i class="bi bi-chevron-left"></i></button>
+      <button class="icon-btn text-white" (click)="mudarMes(-1)"><i class="bi bi-chevron-left"></i></button>
 
       <div class="brand">
-        <div class="logo">Moneva</div>
+        <div class="logo text-white">Moneva</div>
         <small class="muted">Todas as contas</small>
       </div>
 
       <div class="month">{{ nomeMes() }}</div>
 
       <div class="actions">
-        <button class="icon-btn"><i class="bi bi-funnel"></i></button>
-        <button class="icon-btn"><i class="bi bi-search"></i></button>
-        <button class="icon-btn" (click)="mudarMes(1)"><i class="bi bi-chevron-right"></i></button>
-        <button class="icon-btn"><i class="bi bi-three-dots-vertical"></i></button>
+        <button class="icon-btn text-white"><i class="bi bi-funnel"></i></button>
+        <button class="icon-btn text-white"><i class="bi bi-search"></i></button>
+        <button class="icon-btn text-white" (click)="mudarMes(1)"><i class="bi bi-chevron-right"></i></button>
+        <button class="icon-btn text-white"><i class="bi bi-three-dots-vertical"></i></button>
       </div>
     </header>
 
@@ -92,11 +92,11 @@
 @if (showAdd()) {
   <div class="modal">
     <div class="modal-card">
-      <h5 class="mb-2">{{ novo.tipo==='entrada' ? 'Nova Entrada' : 'Nova Despesa' }}</h5>
+      <h5 class="mb-2 text-white">{{ novo.tipo==='entrada' ? 'Nova Entrada' : 'Nova Despesa' }}</h5>
 
       <div class="grid">
         <label>Data
-          <input
+          <input style="color: white;"
           type="date"
           [value]="dateToInput(novo.data)"
           (change)="onDateChange($event)" />
@@ -132,7 +132,7 @@
 
       <div class="modal-actions">
         <button class="btn ghost" (click)="fecharAdd()">Cancelar</button>
-        <button class="btn solid" (click)="salvarTransacao()">Salvar</button>
+        <button class="btn ghost" (click)="salvarTransacao()">Salvar</button>
       </div>
     </div>
   </div>
@@ -142,7 +142,7 @@
 @if (showConfirm().open) {
   <div class="modal">
     <div class="modal-card confirm">
-      <p>Deseja realmente excluir esta transação?</p>
+      <p class="text-white">Deseja realmente excluir esta transação?</p>
       <div class="modal-actions">
         <button class="btn ghost" (click)="cancelarExcluir()">Cancelar</button>
         <button class="btn danger" (click)="excluirConfirmado()">Excluir</button>

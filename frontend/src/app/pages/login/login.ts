@@ -5,12 +5,14 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { UserProfileService } from '../../core/user-profile.service';
 
+
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss'    
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);
@@ -19,7 +21,7 @@ export class LoginComponent {
   private userProfile = inject(UserProfileService);
 
   mode: 'login' | 'register' = 'login';
-  loading = false;
+  loading = false;  
   errorMsg = '';
 
   showLoginPass = false;
@@ -54,42 +56,40 @@ export class LoginComponent {
   }
 
   async submitLogin() {
-    this.errorMsg = '';
-    if (this.loginForm.invalid) return;
-    this.loading = true;
-    // dentro do submitLogin e submitRegister
-    try {
-      const profile = await this.userProfile.getProfile();
-      if (!profile || !profile.completedOnboarding) {
-        this.router.navigateByUrl('/onboarding');
-      } else {
-        this.router.navigateByUrl('/home');
-      }
-    } catch (err) {
-      console.warn('Falha ao ler perfil, seguindo para onboarding por segurança.', err);
-      // Não trave o login: encaminhe para onboarding
-      this.router.navigateByUrl('/onboarding');
-    }
-  }
+  this.errorMsg = '';
+  if (this.loginForm.invalid) return;
+  this.loading = true;
 
-  async submitRegister() {
-    this.errorMsg = '';
-    if (this.registerForm.invalid || this.registerForm.errors?.['passwordMismatch']) return;
-    this.loading = true;
-    // dentro do submitLogin e submitRegister
-    try {
-      const profile = await this.userProfile.getProfile();
-      if (!profile || !profile.completedOnboarding) {
-        this.router.navigateByUrl('/onboarding');
-      } else {
-        this.router.navigateByUrl('/home');
-      }
-    } catch (err) {
-      console.warn('Falha ao ler perfil, seguindo para onboarding por segurança.', err);
-      // Não trave o login: encaminhe para onboarding
-      this.router.navigateByUrl('/onboarding');
-    }
+  const { email, password, remember } = this.loginForm.value as {
+    email: string; password: string; remember: boolean;
+  };
+
+  try {
+    await this.auth.login(email, password);   // << AUTENTICA
+    await this.redirectAfterAuth();                     // << Lê perfil e navega
+  } catch (e: any) {
+    this.errorMsg = this.translateFirebaseError(e?.code);
+  } finally {
+    this.loading = false;
   }
+}
+
+async submitRegister() {
+  this.errorMsg = '';
+  if (this.registerForm.invalid || this.registerForm.errors?.['passwordMismatch']) return;
+  this.loading = true;
+
+  const { name, email, password } = this.registerForm.value as any;
+
+  try {
+    await this.auth.register({ name, email, password }); // << CRIA CONTA
+    await this.redirectAfterAuth();
+  } catch (e: any) {
+    this.errorMsg = this.translateFirebaseError(e?.code);
+  } finally {
+    this.loading = false;
+  }
+}
 
   async forgotPassword() {
     const email = this.loginForm.value.email;
