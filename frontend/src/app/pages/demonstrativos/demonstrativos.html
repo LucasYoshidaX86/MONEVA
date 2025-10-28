@@ -1,6 +1,4 @@
-<!-- src/app/pages/demonstrativos/demonstrativos.html -->
 <div class="board">
-  <!-- ======= Sidebar (mantida como no restante do app) ======= -->
   <aside class="sidebar d-flex flex-column p-3">
     <h2 class="fw-bold text-white mb-4">MONEVA</h2>
     <ul class="nav flex-column">
@@ -11,10 +9,7 @@
     </ul>
   </aside>
 
-  <!-- ======= Conteúdo ======= -->
   <main class="main">
-
-    <!-- Topbar -->
     <header class="topbar">
       <button class="icon-btn text-white" (click)="mudarMes(-1)"><i class="bi bi-chevron-left"></i></button>
 
@@ -33,30 +28,19 @@
       </div>
     </header>
 
-    <!-- Anel central + Percentuais ao redor -->
+    <!-- ===== Gráfico principal ===== -->
     <section class="ring-area">
       <div class="ring-wrap">
         <canvas id="ringChart"></canvas>
 
-        <!-- Centro do anel -->
+        <!-- Centro do gráfico -->
         <div class="ring-center">
           <div class="in-label green">R$ {{ totalEntradas | number:'1.2-2' }}</div>
           <div class="out-label red">R$ {{ totalSaidas | number:'1.2-2' }}</div>
         </div>
-
-        <!-- “Balõezinhos” de % ao redor do anel -->
-        <div class="orbit">
-          @for (g of gastosPorCategoria; track g.nome; let i = $index) {
-            <div class="bubble" [style.--i]="i" [style.--n]="gastosPorCategoria.length">
-              <span class="pct">{{ g.pct }}%</span>
-              <span class="emoji">{{ g.emoji }}</span>
-            </div>
-          }
-        </div>
       </div>
     </section>
 
-    <!-- Barra de saldo -->
     <section class="saldo-bar">
       <div class="saldo-chip">
         <span>Saldo</span>
@@ -64,13 +48,12 @@
       </div>
     </section>
 
-    <!-- Histórico simples (opcional) -->
-    <section class="history">
+    <section class="history text-white">
       @for (t of transacoes; track t.id) {
         <div class="rowi">
           <div class="left">
             <div class="cat">{{ t.categoria }}</div>
-            <small class="muted">{{ t.meio | titlecase }} • {{ t.data | date:'dd/MM' }}</small>
+            <small class="muted">{{ t.meio | titlecase }} • {{ t.data | date:'dd/MM' }} • {{ t.obs | titlecase }}</small>
           </div>
           <div class="right" [class.in]="t.tipo==='entrada'" [class.out]="t.tipo==='saida'">
             {{ t.tipo==='entrada' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
@@ -80,7 +63,6 @@
       }
     </section>
 
-    <!-- Botões flutuantes gigantes -->
     <div class="fab-bar">
       <button class="fab minus" (click)="abrirAdd('saida')">−</button>
       <button class="fab plus"  (click)="abrirAdd('entrada')">+</button>
@@ -88,20 +70,15 @@
   </main>
 </div>
 
-<!-- ===== Modal Adicionar ===== -->
+<!-- Modais mantidos -->
 @if (showAdd()) {
   <div class="modal">
     <div class="modal-card">
       <h5 class="mb-2 text-white">{{ novo.tipo==='entrada' ? 'Nova Entrada' : 'Nova Despesa' }}</h5>
-
       <div class="grid">
         <label>Data
-          <input style="color: white;"
-          type="date"
-          [value]="dateToInput(novo.data)"
-          (change)="onDateChange($event)" />
+          <input style="color: white;" type="date" [value]="dateToInput(novo.data)" (change)="onDateChange($event)" />
         </label>
-
         <label>Meio
           <select [(ngModel)]="novo.meio">
             <option value="pix">PIX</option>
@@ -112,7 +89,6 @@
             <option value="outro">Outro</option>
           </select>
         </label>
-
         <label>Categoria
           <select [(ngModel)]="novo.categoria">
             @for (c of categorias; track c.nome) {
@@ -120,16 +96,13 @@
             }
           </select>
         </label>
-
         <label>Valor (R$)
           <input type="number" step="0.01" min="0" [(ngModel)]="novo.valor" />
         </label>
-
         <label class="full">Observação
           <input type="text" [(ngModel)]="novo.obs" />
         </label>
       </div>
-
       <div class="modal-actions">
         <button class="btn ghost" (click)="fecharAdd()">Cancelar</button>
         <button class="btn ghost" (click)="salvarTransacao()">Salvar</button>
@@ -138,7 +111,6 @@
   </div>
 }
 
-<!-- ===== Modal de Confirmação ===== -->
 @if (showConfirm().open) {
   <div class="modal">
     <div class="modal-card confirm">

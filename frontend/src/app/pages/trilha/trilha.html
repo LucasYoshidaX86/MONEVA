@@ -1,4 +1,5 @@
-<div class="container-fluid vh-100 bg-dark text-white p-0 d-flex">
+<!-- src/app/pages/trilha/trilha.html -->
+<div class="trilha-page container-fluid vh-100 p-0 d-flex">
   <!-- Sidebar -->
   <aside class="sidebar d-flex flex-column p-3">
     <h2 class="fw-bold text-white mb-4">MONEVA</h2>
@@ -7,7 +8,9 @@
         <a class="nav-link text-white" routerLink="/home">🏠 Home</a>
       </li>
       <li class="nav-item mb-2">
-        <a class="nav-link aside text-white active" routerLink="/trilha">💰 Trilha de Aprendizado</a>
+       <a class="nav-link aside text-white active" routerLink="/trilha">
+          💰 Trilha de Aprendizado
+        </a>
       </li>
       <li class="nav-item mb-2">
         <a class="nav-link text-white" routerLink="/demonstrativos">📊 Demonstrativos</a>
@@ -18,52 +21,57 @@
     </ul>
   </aside>
 
+
   <!-- Conteúdo principal -->
-  <main class="flex-grow-1 p-4 bg-black position-relative overflow-auto">
+  <main class="flex-grow-1 p-4 bg-black">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h3 class="fw-semibold text-success">Trilha de Aprendizado</h3>
       <div>
-        <button class="btn btn-outline-light btn-sm me-2">Perfil</button>
-        <button class="btn btn-outline-light btn-sm">⚙️</button>
+        <button class="btn btn-outline-light btn-sm me-2" (click)="resetTrilha()">Reset</button>
+        <button class="btn btn-outline-light btn-sm">Perfil</button>
       </div>
     </div>
 
-    <!-- Trilha em formato de fluxograma -->
-    <div class="trilha-vertical position-relative mx-auto">
-      <!-- Linha principal -->
-      <div class="linha-vertical"></div>
+    <div class="trilha-container position-relative">
+      <!-- linha central -->
+      <div class="linha-central" aria-hidden="true"></div>
 
-      <!-- Etapas -->
-      <div class="etapa">
-        <i class="bi bi-star trilha-icone"></i>
-        <span class="etapa-label">Introdução</span>
-      </div>
+      <!-- renderização dos nós -->
+      @for (nodo of nodos; track nodo.id; let i = $index) {
+        <div
+          id="nodo-{{ i }}"
+          class="nodo"
+          [class.left]="i % 2 === 0"
+          [class.right]="i % 2 !== 0"
+          [ngClass]="getNodoClass(nodo)"
+          (click)="abrirNodo(i)"
+          [routerLink]="nodo.state !== 'locked' ? getNodoRoute(nodo) : null"
+        >
+          <div
+            class="nodo-inner"
+            [style.boxShadow]="'0 6px 18px rgba(0,0,0,0.45), 0 0 0 6px ' + (nodo.state === 'done' ? 'rgba(0,192,83,0.12)' : 'transparent')"
+          >
+            <div class="icone" [style.background]="nodo.color">{{ nodo.emoji }}</div>
 
-      <div class="etapa ativo">
-        <i class="bi bi-star-fill trilha-icone"></i>
-        <span class="sparkles">✨</span>
-        <span class="etapa-label">Fundamentos</span>
-      </div>
+            <div class="titulo">
+              {{ nodo.title }}
+            </div>
 
-      <div class="etapa">
-        <i class="bi bi-star trilha-icone"></i>
-        <span class="etapa-label">Prática</span>
-      </div>
+            <div class="controls">
+              <button
+                class="btn small btn-ghost"
+                (click)="$event.stopPropagation(); concluirNodo(i)"
+              >
+                {{ nodo.state === 'done' ? 'Concluído' : 'Marcar' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
 
-      <div class="etapa">
-        <img src="assets/tesouro1.png" alt="Baú Aberto" class="tesouro" />
-        <span class="etapa-label">Desafio</span>
-      </div>
-
-      <div class="etapa">
-        <i class="bi bi-star trilha-icone"></i>
-        <span class="etapa-label">Aperfeiçoamento</span>
-      </div>
-
-      <div class="etapa">
-        <img src="assets/tesouro2.png" alt="Baú Fechado" class="tesouro" />
-        <span class="etapa-label">Conclusão</span>
-      </div>
+    <div class="mt-5 text-center text-muted small">
+      Complete as lições para desbloquear a próxima. Esse layout foi inspirado nas trilhas gamificadas.
     </div>
   </main>
 </div>
