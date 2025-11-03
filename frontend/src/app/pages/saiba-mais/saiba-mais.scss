@@ -1,3 +1,14 @@
+/* ======= RESET ======= */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #151617;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
 .nav-link.active {
   font-weight: bold;
   color: #00ff88 !important;

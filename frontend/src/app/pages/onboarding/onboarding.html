@@ -1,6 +1,6 @@
 <div class="container text-light py-4">
   <h2 class="mb-3">Bem-vindo! Vamos personalizar sua experiência</h2>
-  <p class="text-white mb-4">Preencha as etapas abaixo. Leva menos de 2 minutos.</p>
+  <p class="text-white mb-4">Preencha as etapas abaixo. Leva menos de 2 minutos e você pode editá-las depois!</p>
 
   @if (errorMsg) {
     <div class="alert alert-warning">{{ errorMsg }}</div>
@@ -14,7 +14,7 @@
     <div class="step" [class.is-active]="step>=4">4</div>
   </div>
 
-  <!-- 🔻 Envolvemos tudo com formGroup -->
+  <!-- Envolvemos tudo com formGroup -->
   <form [formGroup]="form" (ngSubmit)="next()">
 
     @if (step === 1) {
@@ -62,7 +62,7 @@
       <section class="card p-3 mb-3 formulario border-0">
         <h5 class="mb-3 text-white">Sua realidade financeira hoje</h5>
         <div class="mb-3">
-          <label class="form-label text-white">Dores (o que mais te atrapalha?)</label>
+          <label class="form-label text-white">O que mais te Incomoda?</label>
           <textarea class="form-control" rows="3" formControlName="pains"></textarea>
         </div>
         <div class="mb-3">
