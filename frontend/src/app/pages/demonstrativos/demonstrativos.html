@@ -1,8 +1,4 @@
 <div class="board">
-<<<<<<< HEAD
-  <!-- Sidebar -->
-=======
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
   <aside class="sidebar d-flex flex-column p-3">
     <h2 class="fw-bold text-white mb-4">MONEVA</h2>
     <ul class="nav flex-column">
@@ -13,13 +9,7 @@
     </ul>
   </aside>
 
-<<<<<<< HEAD
-  <!-- Conteúdo -->
   <main class="main">
-    <!-- Topbar -->
-=======
-  <main class="main">
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
     <header class="topbar">
       <div class="brand">
         <div class="logo">Moneva</div>
@@ -50,42 +40,20 @@
       </div>
     </header>
 
-<<<<<<< HEAD
     <!-- Gráfico -->
-    <section class="ring-area">
-      <div class="ring-wrap">
-        <canvas id="ringChart"></canvas>
-=======
-    <!-- ===== Gráfico principal ===== -->
     <section class="ring-area">
       <div class="ring-wrap">
         <canvas id="ringChart"></canvas>
 
         <!-- Centro do gráfico -->
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
         <div class="ring-center">
           <div class="in-label">R$ {{ totalEntradas() | number:'1.2-2' }}</div>
           <div class="out-label">R$ {{ totalSaidas() | number:'1.2-2' }}</div>
-        </div>
-<<<<<<< HEAD
-
-        <div class="orbit">
-          @for (g of gastosPorCategoria(); track g.nome; let i = $index) {
-            <div class="bubble" [style.--i]="i" [style.--n]="gastosPorCategoria().length">
-              <span class="pct">{{ g.pct }}%</span>
-              <span class="emoji">{{ g.emoji }}</span>
-            </div>
-          }
         </div>
       </div>
     </section>
 
     <!-- Saldo + botões fixos -->
-=======
-      </div>
-    </section>
-
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
     <section class="saldo-bar">
       <div class="saldo-row">
         <button class="mini-fab minus" (click)="abrirAdd('saida')">−</button>
@@ -99,7 +67,6 @@
       </div>
     </section>
 
-<<<<<<< HEAD
     <!-- Lista -->
     <section class="history">
       @for (t of filtered(); track t.id) {
@@ -108,14 +75,6 @@
             <div class="cat">{{ t.categoria }}</div>
             <small class="muted">{{ (t.meio | titlecase) }} • {{ t.date.toDate() | date:'dd/MM' }}</small>
             <small class="muted" *ngIf="t.obs">— {{ t.obs }}</small>
-=======
-    <section class="history text-white">
-      @for (t of transacoes; track t.id) {
-        <div class="rowi">
-          <div class="left">
-            <div class="cat">{{ t.categoria }}</div>
-            <small class="muted">{{ t.meio | titlecase }} • {{ t.data | date:'dd/MM' }} • {{ t.obs | titlecase }}</small>
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
           </div>
           <div class="right" [class.in]="t.tipo==='entrada'" [class.out]="t.tipo==='saida'">
             {{ t.tipo==='entrada' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
@@ -125,36 +84,22 @@
       }
     </section>
 
-<<<<<<< HEAD
     <!-- FAB inteligentes: aparecem quando o saldo sai de vista -->
     <div class="fab-smart">
       <button class="fab small plus" (click)="abrirAdd('entrada')">+</button>
       <button class="fab small minus" (click)="abrirAdd('saida')">−</button>
-=======
-    <div class="fab-bar">
-      <button class="fab minus" (click)="abrirAdd('saida')">−</button>
-      <button class="fab plus"  (click)="abrirAdd('entrada')">+</button>
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
     </div>
   </main>
 </div>
 
-<<<<<<< HEAD
 <!-- Modal Adicionar -->
-=======
-<!-- Modais mantidos -->
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
 @if (showAdd()) {
   <div class="modal">
     <div class="modal-card">
       <h5 class="mb-2 text-white">{{ novo.tipo==='entrada' ? 'Nova Entrada' : 'Nova Despesa' }}</h5>
       <div class="grid">
         <label>Data
-<<<<<<< HEAD
           <input type="date" [value]="dateToInput(novo.date)" (change)="onDateChange($event)" />
-=======
-          <input style="color: white;" type="date" [value]="dateToInput(novo.data)" (change)="onDateChange($event)" />
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
         </label>
         <label>Meio
           <select [(ngModel)]="novo.meio">
@@ -183,10 +128,7 @@
   </div>
 }
 
-<<<<<<< HEAD
 <!-- Modal Confirmação -->
-=======
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
 @if (showConfirm().open) {
   <div class="modal">
     <div class="modal-card confirm">
@@ -262,7 +204,7 @@
   </div>
 }
 
-<!-- Modal Lixeira (placeholder estilizado; substitua por um componente quando quiser) -->
+<!-- Modal Lixeira -->
 @if (showTrash()) {
   <div class="modal" (click)="fecharLixeira()">
     <div class="modal-card" (click)="$event.stopPropagation()">
@@ -278,9 +220,7 @@
               <div class="rowi">
                 <div class="left">
                   <div class="cat">{{ t.categoria }}</div>
-                  <small class="muted">
-                    {{ (t.meio | titlecase) }} • {{ t.date.toDate() | date:'dd/MM' }}
-                  </small>
+                  <small class="muted">{{ (t.meio | titlecase) }} • {{ t.date.toDate() | date:'dd/MM' }}</small>
                   <small class="muted" *ngIf="t.obs">— {{ t.obs }}</small>
                 </div>
                 <div class="right" [class.in]="t.tipo==='entrada'" [class.out]="t.tipo==='saida'">
