@@ -52,11 +52,7 @@
   flex-direction:column;
   align-items:center;
   color:var(--text);
-<<<<<<< HEAD
-  background:#000;
-=======
-  background-color: #151617;
->>>>>>> 3173b95d0d481b04af7921ec1f5c43d5dd1b8b5e
+  background-color:#151617;
 }
 
 /* =========================================================
@@ -115,9 +111,7 @@
   border-color:rgba(255,255,255,.2);
 }
 
-.menu-wrap {
-  position:relative;
-}
+.menu-wrap { position:relative; }
 
 .menu-card {
   position:absolute;
@@ -141,13 +135,8 @@
   color:#e6eef4;
 }
 
-.menu-item:hover {
-  background:#161a1e;
-}
-
-.menu-item.danger {
-  color:#ffb0b0;
-}
+.menu-item:hover { background:#161a1e; }
+.menu-item.danger { color:#ffb0b0; }
 
 /* =========================================================
    Donut (gráfico)
@@ -166,34 +155,20 @@
   place-items:center;
 }
 
-#ringChart {
-  width:100%!important;
-  height:100%!important;
-}
+#ringChart { width:100%!important; height:100%!important; }
 
 .ring-center {
   position:absolute;
   inset:0;
   display:grid;
-  place-items: center;
+  place-items:center;
   pointer-events:none;
 }
 
-.ring-center .in-label {
-  color:#20d07f;
-  font-weight:800;
-}
+.ring-center .in-label { color:#20d07f; font-weight:800; }
+.ring-center .out-label { margin-top:4px; color:#ff7f72; font-weight:700; }
 
-.ring-center .out-label {
-  margin-top:4px;
-  color:#ff7f72;
-  font-weight:700;
-}
-
-.orbit {
-  position:absolute;
-  inset:0;
-}
+.orbit { position:absolute; inset:0; }
 
 .bubble {
   --R:calc(50% + 180px);
@@ -211,9 +186,7 @@
   color:#d8e2e8;
 }
 
-.bubble .emoji {
-  font-size:20px;
-}
+.bubble .emoji { font-size:20px; }
 
 /* =========================================================
    Saldo + botões fixos
@@ -242,9 +215,7 @@
   align-items:baseline;
 }
 
-.saldo-chip strong {
-  color:var(--green);
-}
+.saldo-chip strong { color:var(--green); }
 
 .mini-fab {
   width:64px;
@@ -274,6 +245,7 @@
 .rowi {
   display:grid;
   grid-template-columns:1fr auto 40px;
+  color: white;
   align-items:center;
   gap:12px;
   padding:10px 12px;
@@ -283,9 +255,8 @@
   margin-bottom:8px;
 }
 
-.rowi .cat   { font-weight:600; }
-.rowi .muted { color:#93a0ab;  }
-
+.rowi .cat { font-weight:600; }
+.rowi .muted { color:#93a0ab; }
 .right.in  { color:#22d085; font-weight:700; }
 .right.out { color:#ff7f72; font-weight:700; }
 
@@ -301,7 +272,7 @@
 }
 
 /* =========================================================
-   FAB inteligentes (quando saldo sai de vista)
+   FAB inteligentes
    ========================================================= */
 .fab-smart {
   position:fixed;
@@ -359,10 +330,7 @@
   color:var(--text);
 }
 
-.modal-card.confirm {
-  width:420px;
-  text-align:center;
-}
+.modal-card.confirm { width:420px; text-align:center; }
 
 .grid {
   display:grid;
@@ -380,8 +348,7 @@
 
 .grid label.full { grid-column:1/-1; }
 
-input,
-select {
+input, select {
   background:#161a1e;
   color:var(--text);
   border:1px solid rgba(255,255,255,.12);
