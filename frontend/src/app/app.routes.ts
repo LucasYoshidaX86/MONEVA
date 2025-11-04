@@ -16,9 +16,10 @@ import { Conquistas } from './pages/conquistas/conquistas';
 
 //Imports Relacionados a Trilha de Aprendizado
 import { Introducao } from './pages/trilha/etapa01/fase01/introducao/introducao';
-import { Orcamento } from './pages/trilha/etapa01/fase02/orcamento/orcamento';
-import { ControleGastos } from './pages/trilha/etapa01/fase03/controle-gastos/controle-gastos';
+import { QuizDinheiroComponent } from './pages/trilha/etapa01/fase02/quiz-dinheiro/quiz-dinheiro';
+import { EducacaoFinanceira } from './pages/trilha/etapa01/fase03/educacao-financeira/educacao-financeira';
 import { Reserva } from './pages/trilha/etapa01/fase04/reserva/reserva';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -44,8 +45,8 @@ export const routes: Routes = [
 
   // Relacionados a Trilha de Aprendizado
   { path: 'trilha/Introducao', component: Introducao, canActivate: [authGuard, onboardingGuard] },
-  { path: 'trilha/Orcamento', component: Orcamento, canActivate: [authGuard, onboardingGuard] },
-  { path: 'trilha/controledeGastos', component: ControleGastos, canActivate: [authGuard, onboardingGuard] },
+  { path: 'trilha/quiz-dinheiro', component: QuizDinheiroComponent, canActivate: [authGuard, onboardingGuard]},
+  { path: 'trilha/educacao-financeira', component: EducacaoFinanceira, canActivate: [authGuard, onboardingGuard] },
   { path: 'trilha/Reserva', component: Reserva, canActivate: [authGuard, onboardingGuard] },
 
 

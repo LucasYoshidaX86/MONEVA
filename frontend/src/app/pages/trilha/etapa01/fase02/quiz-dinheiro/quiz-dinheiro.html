@@ -1,0 +1,66 @@
+<div class="game-wrapper">
+  <header class="game-header">
+    <div class="pill">Fase 02 — Jogo</div>
+    <h1 class="game-title">
+      Você sabe lidar com dinheiro? <span class="emoji">🎯</span>
+    </h1>
+    <p class="game-sub">Responda V/F. Acerte tudo para concluir. 🚀</p>
+  </header>
+
+  <section class="tips">
+    @for (t of tips; track t.text) {
+      <div class="tip">
+        <span class="tip-icon">{{ t.icon }}</span>
+        <span class="tip-text">{{ t.text }}</span>
+      </div>
+    }
+  </section>
+
+  <section class="quiz">
+    <h2 class="quiz-title">Verdadeiro ou Falso?</h2>
+
+    @for (q of questions(); track q.id; let i = $index) {
+      <div class="quiz-item">
+        <div class="q-row">
+          <div class="q-text">{{ q.text }}</div>
+
+          @if (reveal()) {
+            <div class="q-check" [class.ok]="q.user === q.answer" [class.bad]="q.user !== q.answer">
+              {{ q.user === q.answer ? '✅' : '❌' }}
+            </div>
+          }
+        </div>
+
+        <div class="q-actions">
+          <button class="btn opt" [class.active]="q.user==='V'" (click)="mark('V', i)">V</button>
+          <button class="btn opt" [class.active]="q.user==='F'" (click)="mark('F', i)">F</button>
+        </div>
+
+        @if (reveal() && q.user !== q.answer) {
+          <div class="q-hint">
+            {{ q.answer === 'V' ? '💡 É VERDADEIRO.' : '💡 É FALSO.' }}
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="panel">
+    @if (showFeedback() === 'erro') {
+      <div class="alert alert-erro">
+        ❌ Você acertou {{ correctCount() }}/{{ questions().length }}. Revise os itens com ❌.
+      </div>
+    }
+    @if (showFeedback() === 'ok') {
+      <div class="alert alert-ok">
+        ✅ Excelente! Atividade concluída. Voltando à trilha…
+      </div>
+    }
+
+    <div class="actions">
+      <button class="btn btn-concluir" [disabled]="!allAnswered()" (click)="concluir()">Concluir</button>
+      <a routerLink="/trilha" class="btn btn-ghost">Voltar</a>
+    </div>
+  </section>
+</div>
+

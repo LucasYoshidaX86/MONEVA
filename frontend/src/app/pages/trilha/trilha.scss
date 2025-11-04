@@ -1,195 +1,229 @@
 /* ======= RESET ======= */
 body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000 !important;
-  color: #fff;
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background-color: #000; color: #fff;
   font-family: 'Poppins', sans-serif;
-  overflow: hidden; /* impede o scroll geral da página */
 }
 
 /* ======= SIDEBAR ======= */
 .sidebar {
-  width: 250px;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #007a4d, #003822);
+  width: 250px; min-height: 100vh;
+  background: linear-gradient(180deg, #0a7a4f, #03462c);
   transition: all 0.3s ease;
 }
-
-.sidebar h2 {
-  letter-spacing: 1px;
-}
-
+.sidebar h2 { letter-spacing: 1px; }
 .sidebar .nav-link {
-  font-size: 0.95rem;
-  padding: 8px 12px;
-  border-radius: 8px;
+  font-size: 0.95rem; padding: 8px 12px; border-radius: 8px;
   transition: background 0.3s, transform 0.2s;
 }
-
 .sidebar .nav-link:hover {
   background: linear-gradient(90deg, rgba(0,255,136,0.15), transparent);
   transform: translateX(4px);
 }
-
 .nav-link.active {
   background: linear-gradient(90deg, rgba(0,255,136,0.15), transparent);
-  font-weight: bold;
-  color: #00ff88 !important;
-  border-left: 4px solid #00ff88;
-  border-radius: 8px 0 0 8px;
+  font-weight: 700; color: #00ff9a !important;
+  border-left: 4px solid #00ff9a; border-radius: 8px 0 0 8px;
 }
 
-/* ======= MAIN CONTENT ======= */
-main {
-  flex-grow: 1;
-  background: #000;
-  color: #fff;
-  height: 100vh;
-  overflow-y: auto; /* scroll só no conteúdo principal */
+/* ======= TRILHA ======= */
+:root {
+  --mint: #00ff9a;
+  --dark-1: #0c1411;
+  --dark-2: #111a16;
+  --dark-3: #17241d;
+  --line: #2e4f42;
+  --text-strong: #e7fff4;
+}
+
+.trilha__title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #b9ffe7;
+  letter-spacing: .3px;
+}
+
+.activity-count {
+  color: #00ff9a;
+  font-size: 20px;
+}
+
+/* ===== Torre lateral ===== */
+.tower {
   position: relative;
-  scroll-behavior: smooth;
-}
-
-/* container da trilha */
-.trilha-container {
-  position: relative;
-  width: 100%;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 60px 0 120px;
-  overflow: visible;
-}
-
-/* linha central vertical */
-.linha-central {
-  position: fixed; /* fixa a linha central mesmo com scroll */
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(180deg, rgba(0,255,136,0.18), rgba(0,255,136,0.06));
-  box-shadow: 0 0 20px rgba(0,255,136,0.04);
-  z-index: 0;
-  border-radius: 6px;
-}
-
-/* ======= NODOS ======= */
-.nodo {
-  position: relative;
-  width: calc(50% - 60px);
-  display: flex;
-  justify-content: center;
-  margin: 48px 0;
-  z-index: 2;
-  min-height: 120px;
-}
-
-/* posicionamento alternado */
-.nodo.left {
-  justify-content: flex-end;
-  padding-right: 80px;
-}
-.nodo.right {
-  justify-content: flex-start;
-  padding-left: 80px;
-}
-
-/* cartão interno */
-.nodo-inner {
-  width: 240px;
-  background: linear-gradient(180deg, #0f1212, #151717);
-  border-radius: 16px;
-  padding: 18px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  transition: transform .18s ease, box-shadow .18s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: visible;
-  z-index: 3;
-}
-
-/* círculo do ícone */
-.icone {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
+  margin-top: 8px;
   display: grid;
-  place-items: center;
-  font-size: 32px;
-  background: rgba(255,255,255,0.02);
-  border: 4px solid rgba(0,0,0,0.45);
-  color: #ffffff;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+  justify-items: center;
+  grid-auto-rows: minmax(132px, auto);
+  row-gap: 40px;
+  padding: 4px 0 12px;
+  --progress: 0%;
 }
 
-/* título */
-.titulo {
-  color: #dbe9df;
-  font-weight: 700;
-  font-size: 0.98rem;
-}
-
-/* botão pequeno */
-.controls {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-}
-
-/* ======= ESTADOS ======= */
-.nodo.locked .nodo-inner {
-  opacity: 0.35;
-  filter: grayscale(0.6);
-  cursor: default;
-}
-.nodo.current .nodo-inner {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0, 192, 83, 0.14);
-}
-.nodo.done .nodo-inner {
-  border: 1px solid rgba(0,192,83,0.12);
-  box-shadow: 0 10px 30px rgba(0,192,83,0.06);
-}
-
-/* ======= CONECTOR ENTRE NODOS ======= */
-.nodo.left::after,
-.nodo.right::after {
+/* Linha base à direita — próxima dos cards */
+.tower::before {
   content: '';
   position: absolute;
-  top: 50%;
-  width: 50px;
-  height: 4px;
-  background: linear-gradient(90deg, rgba(0,255,136,0.22), transparent);
+  right: 30%;   
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: #2e4f42;
+  border-radius: 999px;
+  z-index: 0;
+}
+
+/* Linha verde do progresso */
+.tower::after {
+  content: '';
+  position: absolute;
+  right: 30%;
+  top: 0;
+  width: 10px;
+  height: var(--progress, 0%);
+  background: #00ff9a;
+  border-radius: 999px;
+  transition: height .4s ease;
+  z-index: 0;
+}
+
+/* ===== Cada nível e zig-zague entre os cards ===== */
+.unit-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 132px;
+  width: 100%;
+  max-width: 520px;
   z-index: 1;
 }
-.nodo.left::after {
-  right: -25px;
-  transform: translateY(-50%);
-}
-.nodo.right::after {
-  left: -25px;
-  transform: translateY(-50%) rotate(180deg);
+
+// Zig-zague dos cards
+.unit-wrap.shift-left  { transform: translateX(-40px); } 
+.unit-wrap.shift-right { transform: translateX(40px); }  
+@media (max-width: 576px){
+  .unit-wrap.shift-left, .unit-wrap.shift-right { transform: none; }
 }
 
-/* hover */
-.nodo-inner:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+/* ===== Card da Atividade ===== */
+.unit {
+  top: 15px;
+  position: relative;
+  z-index: 1;
+  border: 0;
+  border-radius: 22px;
+  width: 168px;
+  height: 168px;
+  background: linear-gradient(180deg, var(--dark-2), var(--dark-3));
+  box-shadow: 0 8px 28px rgba(0,0,0,.35);
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 16px 12px 14px;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, outline-color .12s ease;
+  outline: 3px solid transparent;
 }
 
-/* responsividade */
+.unit--lesson { background: linear-gradient(180deg, #14241d, #0f1b16); }
+.unit--game   { background: linear-gradient(180deg, #0f2c21, #0d1d17); }
+
+.unit.is-locked {
+  filter: grayscale(1) opacity(.65);
+  cursor: not-allowed;
+}
+
+.unit.is-unlocked:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0,255,154,.25);
+  outline-color: rgba(0,255,154,.4);
+}
+
+.unit.is-completed {
+  outline-color: #00ff9a;
+}
+
+/* ===== Anel de Progresso ===== */
+.unit .ring {
+  --p: 0%;
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: conic-gradient(var(--mint) var(--p), rgba(255,255,255,.08) 0);
+  box-shadow: 0 0 16px rgba(0,255,154,.18);
+  z-index: 0;
+}
+
+.unit .ring::after {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.1), transparent 60%), #0e1713;
+  border-radius: 50%;
+}
+
+/* ===== Ícones e Status ===== */
+.unit .icon {
+  position: absolute;
+  top: 30px;
+  font-size: 45px;
+  z-index: 2;
+}
+
+.unit .state {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 16px;
+  z-index: 2;
+}
+
+/* ===== Título fora do card ===== */
+.unit-label {
+  top: 14px;
+  position: relative;
+  z-index: 2;
+  margin-top: 20px;
+  max-width: 800px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-strong);
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
+
+/* ===== Badge COMEÇAR ===== */
+.start-badge {
+  position: absolute;
+  z-index: 3;
+  top: -5px;
+  background: #ffffff;
+  color: #151515;
+  font-weight: 900;
+  font-size: 15px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: .4px;
+  box-shadow: 0 4px 14px rgba(255,255,255,.18);
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 576px) {
+  .unit { width: 148px; height: 148px; }
+  .unit .ring { width: 86px; height: 86px; top: 14px; }
+  .unit .icon { top: 40px; }
+  .tower::before, .tower::after { right: 6%; }
+}
+
+/* ===== Sidebar responsiva ===== */
 @media (max-width: 768px) {
-  .trilha-container { padding: 30px 12px 120px; }
-  .linha-central { left: 20px; transform: none; height: 100vh; width: 4px; top: 0; }
-  .nodo { width: 100%; justify-content: flex-start; padding-left: 36px; margin: 26px 0; }
-  .nodo.left::after, .nodo.right::after { display: none; }
-  .nodo-inner { width: calc(100% - 56px); }
-  .icone { width: 58px; height: 58px; font-size: 26px; }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+  }
 }

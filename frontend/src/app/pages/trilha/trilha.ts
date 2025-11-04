@@ -1,88 +1,66 @@
-// src/app/pages/trilha/trilha.ts
-import { Component, AfterViewInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TrilhaProgressService, TrilhaSection, NodeStatus } from '../../trilha/trilha-progress';
 
-type NodoState = 'locked' | 'current' | 'done';
-
-interface Nodo {
-  id: number;
-  title: string;
-  route: string;
-  emoji: string;
-  color: string;
-  state: NodoState;
-}
-
+// Declaração do componente Angular
 @Component({
-  selector: 'app-trilha',
-  standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: './trilha.html',
-  styleUrl: './trilha.scss'
+  selector: 'app-trilha',          // nome da tag usada no HTML
+  standalone: true,               // indica que o componente é independente (não precisa de módulo)
+  imports: [RouterLink],          // importa o RouterLink para usar no template
+  templateUrl: './trilha.html',   // caminho do HTML do componente
+  styleUrl: './trilha.scss'       // caminho do SCSS (estilos)
 })
-export class Trilha implements AfterViewInit {
-  activeIndex = signal<number>(1);
+export class Trilha {
 
-  nodos: Nodo[] = [
-    { id: 1, title: 'Introdução', route: '/trilha/Introducao', emoji: '👋', color: '#00c053', state: 'done' },
-    { id: 2, title: 'Orçamento', route: '/trilha/Orcamento', emoji: '📊', color: '#01a44b', state: 'current' },
-    { id: 3, title: 'Controle de Gastos', route: '/trilha/controledeGastos', emoji: '🛒', color: '#00b894', state: 'locked' },
-    { id: 4, title: 'Reserva', route: '/trilha/Reserva', emoji: '🏦', color: '#fdcb6e', state: 'locked' },
-    { id: 5, title: 'Cartão e Juros', route: '/trilha/cartao-juros', emoji: '💳', color: '#6c5ce7', state: 'locked' },
-    { id: 6, title: 'Investimentos', route: '/trilha/investimentos', emoji: '📈', color: '#0984e3', state: 'locked' },
-    { id: 7, title: 'Meta Financeira', route: '/trilha/meta-financeira', emoji: '🎯', color: '#e17055', state: 'locked' },
-    { id: 8, title: 'Conclusão', route: '/trilha/conclusao', emoji: '🏆', color: '#d63031', state: 'locked' },
-  ];
+  // Injeção do serviço que controla o progresso da trilha
+  constructor(private progress: TrilhaProgressService) {}
 
-  ngAfterViewInit(): void {
-    setTimeout(() => this.scrollToActive(), 120);
+  // Getter usado para acessar as seções direto no HTML
+  // Isso evita erro de referência antes do construtor rodar
+  get sections(): TrilhaSection[] {
+    return this.progress.sections;
   }
 
-  abrirNodo(i: number): void {
-    const nodo = this.nodos[i];
-    if (nodo.state === 'locked') return;
-    this.activeIndex.set(i);
-    this.scrollToActive();
+  // ===== Métodos usados no HTML =====
+  // Cada um desses apenas chama o método correspondente do service,
+  // servindo como “ponte” entre o template e a lógica do serviço.
+
+  // Zera todo o progresso da trilha.
+  resetProgress() {
+    this.progress.reset();
   }
 
-  concluirNodo(i: number): void {
-    if (this.nodos[i].state === 'locked') return;
-    this.nodos[i].state = 'done';
-
-    const next = this.nodos[i + 1];
-    if (next && next.state === 'locked') {
-      next.state = 'current';
-      this.activeIndex.set(i + 1);
-      setTimeout(() => this.scrollToActive(), 80);
-    }
+  // Conta quantas unidades (aulas/jogos) estão concluídas dentro da seção.
+  doneCount(sec: TrilhaSection) {
+    return this.progress.doneCount(sec);
   }
 
-  getNodoRoute(nodo: Nodo): string {
-    return nodo.route;
+  // Calcula a porcentagem total de progresso de uma seção.
+  sectionProgress(sec: TrilhaSection) {
+    return this.progress.sectionProgress(sec);
   }
 
-  getNodoClass(nodo: Nodo): string {
-    return nodo.state;
+  // Retorna o status do nó (bloqueado, liberado ou concluído).
+  getStatus(id: string): NodeStatus {
+    return this.progress.getStatus(id);
   }
 
-  scrollToActive(): void {
-    const idx = this.activeIndex();
-    const el = document.getElementById(`nodo-${idx}`);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Retorna a porcentagem de progresso de um nó específico.
+  progressOf(id: string): number {
+    return this.progress.nodeProgress(id);
   }
 
-  resetTrilha(): void {
-    this.nodos.forEach((n, i) => (n.state = i === 0 ? 'current' : 'locked'));
-    this.activeIndex.set(0);
-    setTimeout(() => this.scrollToActive(), 150);
+  // Verifica se o nó atual é o que o usuário deve começar (exibe o selo “COMEÇAR”).
+  isCurrent(sec: TrilhaSection, index: number): boolean {
+    return this.progress.isCurrent(sec, index);
   }
 
-
-
-
-
-
-
-
+  // Gera a rota do nó para navegação no Angular Router.
+  routeFor(id: string): string {
+    return this.progress.routeFor(id);
+  }
 }
+
+
+
+
