@@ -62,7 +62,7 @@
   width:100%;
   max-width:920px;
   display:grid;
-  grid-template-columns:1fr auto auto;
+  grid-template-columns:1fr 1fr 1fr;
   align-items:center;
   gap:10px;
   padding:18px 16px 6px;
@@ -70,6 +70,7 @@
 
 .brand .logo {
   font:700 24px/1 Poppins,sans-serif;
+  color: #00c053;
 }
 
 .brand .muted {
@@ -86,6 +87,12 @@
 .month {
   font-weight:600;
   color:#cbd5dc;
+}
+
+.month-nav .month {
+  font-size:1.2rem;
+  font-weight:700;
+  color:#fff;
 }
 
 .actions {
@@ -159,7 +166,7 @@
 
 .ring-center {
   position:absolute;
-  inset:0;
+  inset:10;
   display:grid;
   place-items:center;
   pointer-events:none;
@@ -228,10 +235,23 @@
   display:grid;
   place-items:center;
   box-shadow:0 8px 30px rgba(0,0,0,.4);
+  cursor:pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.mini-fab.plus  { border-color:rgba(0,192,83,.35); }
-.mini-fab.minus { border-color:rgba(255,120,90,.35); }
+.mini-fab.plus  { border-color:#00c053; }
+.mini-fab.minus { border-color:#a00000; }
+
+/* Efeitos de destaque */
+.mini-fab.plus:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow:0 0 15px #00c053;
+}
+
+.mini-fab.minus:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow:0 0 15px #c40000;
+}
 
 /* =========================================================
    Lista (histórico)
@@ -294,6 +314,7 @@
   pointer-events:auto;
 }
 
+/* Botões inteligentes flutuantes */
 .fab.small {
   width:64px;
   height:64px;
@@ -304,10 +325,22 @@
   font:700 28px/1 Poppins,sans-serif;
   display:grid;
   place-items:center;
+  cursor:pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.fab.small.plus  { border-color:rgba(0,192,83,.35); }
-.fab.small.minus { border-color:rgba(255,120,90,.35); }
+.fab.small.plus  { border-color:#00c053; }
+.fab.small.minus { border-color:#a00000; }
+
+.fab.small.plus:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow:0 0 15px #00c053;
+}
+
+.fab.small.minus:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow:0 0 15px #c40000;
+}
 
 /* =========================================================
    Modais
@@ -376,9 +409,10 @@ input, select {
 }
 
 .btn.solid {
-  background:var(--green);
-  color:#0b1410;
+  background: #00c053;
+  color:white;
   font-weight:700;
+  border-radius: 2px solid #202428;
 }
 
 .btn.danger {

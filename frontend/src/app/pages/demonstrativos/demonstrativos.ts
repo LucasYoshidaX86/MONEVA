@@ -18,6 +18,16 @@ type Filtro = {
   valor: number | null;  // busca por valor exato
 };
 
+const DEFAULT_FILTRO: Filtro = {
+  tipo: 'todas',
+  meio: 'todos',
+  categoria: 'todas',
+  start: null,
+  end: null,
+  q: '',
+  valor: null
+};
+
 @Component({
   selector: 'app-demonstrativos',
   standalone: true,
@@ -63,14 +73,31 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
   rows = signal<TransacaoDoc[]>([]);
 
   // Filtros/busca
-  filtro = signal<Filtro>({
-    tipo: 'todas', meio: 'todos', categoria: 'todas',
-    start: null, end: null, q: '', valor: null
-  });
+  filtro = signal<Filtro>({ ...DEFAULT_FILTRO });
 
   // util p/ atualizar filtro (evita spread no template)
   updateFiltro<K extends keyof Filtro>(key: K, value: Filtro[K]) {
     this.filtro.update(f => ({ ...f, [key]: value }));
+  }
+
+  // ✅ Indica se algum filtro está ativo (diferente do padrão)
+  hasFilter = computed(() => {
+    const f = this.filtro();
+    const d = DEFAULT_FILTRO;
+    return (
+      f.tipo !== d.tipo ||
+      f.meio !== d.meio ||
+      f.categoria !== d.categoria ||
+      f.start !== d.start ||
+      f.end !== d.end ||
+      (f.q?.trim() ?? '') !== d.q ||
+      f.valor !== d.valor
+    );
+  });
+
+  // ✅ Reseta para o padrão
+  resetFiltro() {
+    this.filtro.set({ ...DEFAULT_FILTRO });
   }
 
   // Novo registro (modal existente)

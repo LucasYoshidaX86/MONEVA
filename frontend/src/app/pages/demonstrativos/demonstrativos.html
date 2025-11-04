@@ -24,6 +24,11 @@
 
       <div class="actions">
         <button class="icon-btn" (click)="abrirFiltro()"><i class="bi bi-funnel"></i></button>
+
+        @if (hasFilter()) {
+          <button class="pill-btn clear" (click)="resetFiltro()">Remover filtro</button>
+        }
+
         <button class="icon-btn" (click)="abrirBusca()"><i class="bi bi-search"></i></button>
         <div class="menu-wrap">
           <button class="icon-btn" (click)="abrirMenu()"><i class="bi bi-three-dots-vertical"></i></button>
@@ -47,8 +52,8 @@
 
         <!-- Centro do gráfico -->
         <div class="ring-center">
-          <div class="in-label">R$ {{ totalEntradas() | number:'1.2-2' }}</div>
-          <div class="out-label">R$ {{ totalSaidas() | number:'1.2-2' }}</div>
+          <div class="in-label">Entradas<br>R$ {{ totalEntradas() | number:'1.2-2' }}</div>
+          <div class="out-label">Saídas<br>R$ {{ totalSaidas() | number:'1.2-2' }}</div>
         </div>
       </div>
     </section>
@@ -177,6 +182,9 @@
         </label>
       </div>
       <div class="modal-actions">
+        @if (hasFilter()) {
+          <button class="btn ghost" (click)="resetFiltro()">Limpar</button>
+        }
         <button class="btn ghost" (click)="fecharFiltro()">Fechar</button>
       </div>
     </div>

@@ -1,88 +1,89 @@
-<div class="board">
+<div class="container-fluid vh-100 bg-dark text-white p-0 d-flex">
   <!-- Sidebar -->
-  <aside class="sidebar d-flex flex-column p-3">
+  <aside class="sidebar aside d-flex flex-column p-3">
     <h2 class="fw-bold text-white mb-4">MONEVA</h2>
     <ul class="nav flex-column">
-      <li class="nav-item mb-2"><a class="nav-link active text-white" routerLink="/home">🏠 Home</a></li>
-      <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/trilha">💰 Trilha de Aprendizado</a></li>
-      <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/demonstrativos">📊 Demonstrativos</a></li>
-      <li class="nav-item"><a class="nav-link text-white" routerLink="/conquistas">🏆 Conquistas</a></li>
+      <li class="nav-item mb-2">
+        <a class="nav-link aside text-white active" routerLink="/home">🏠 Home</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white " routerLink="/trilha">💰 Trilha de Aprendizado</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-white" routerLink="/demonstrativos">📊 Demonstrativos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" routerLink="/conquistas">🏆 Conquistas</a>
+      </li>
     </ul>
   </aside>
 
-  <!-- Conteúdo -->
-  <main class="main">
-
-    <!-- Header -->
-    <header class="home-top">
+  <!-- Conteúdo principal -->
+  <main class="flex-grow-1 p-4" style="background-color: #0f1113">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="fw-semibold">Fala Aí, {{ firstName() }}!</h3>
       <div>
-        <h2 class="hello">Fala aí, {{ firstName() }}!</h2>
-        <small class="muted">{{ nomeMes() }}</small>
+        <!-- Botão Perfil (pílula com avatar duplo-anel) -->
+        <button type="button"
+                class="profile-cta"
+                (click)="openProfile()"
+                aria-label="Abrir painel de perfil">
+          <span class="profile-cta__label">Perfil</span>
+
+          <!-- Avatar com 2 anéis (externo verde + interno branco) -->
+          <span class="profile-cta__avatar" aria-hidden="true">
+            <i class="bi bi-person-fill"></i>
+          </span>
+        </button>
+        <button class="btn btn-outline-light " style="border-radius: #00c053">⚙️</button>
       </div>
-    </header>
+    </div>
 
-    <!-- KPIs -->
-    <section class="kpis">
-      <div class="kcard">
-        <div class="khead">🎯 Metas Financeiras</div>
-        <div class="kprogress">
-          <div class="fill" [style.width.%]="metaProgresso() * 100"></div>
-        </div>
-        <small class="muted">
-          Economizado: <b>R$ {{ economiaMensal() | number:'1.2-2' }}</b>
-          <ng-container *ngIf="goal() as g">
-            de <b>R$ {{ g.valorMeta | number:'1.2-2' }}</b>
-          </ng-container>
-        </small>
-      </div>
-
-      <div class="kcard">
-        <div class="khead">💰 Economia do Mês</div>
-        <div class="big">R$ {{ economiaMensal() | number:'1.2-2' }}</div>
-        <small class="muted">Saldo (Entradas − Saídas)</small>
-      </div>
-
-      <div class="kcard">
-        <div class="khead">🏅 Nível Atual</div>
-        <div class="kprogress thin">
-          <div class="fill" style="width: 45%"></div>
-        </div>
-        <small class="muted">Conquistas: 27 / 200</small>
-      </div>
-    </section>
-
-    <!-- Alertas -->
-    <section class="alerts" *ngIf="alertas().length">
-      <div class="alert" *ngFor="let a of alertas()" [class.med]="a.gravidade==='med'" [class.high]="a.gravidade==='high'">
-        <span *ngIf="a.tipo==='categoria'">⚠️</span>
-        <span *ngIf="a.tipo==='pico'">📈</span>
-        <span *ngIf="a.tipo==='meta'">🎯</span>
-        <span>{{ a.texto }}</span>
-      </div>
-    </section>
-
-    <!-- Dashboard -->
-    <section class="dashboard">
-      <h3>Dashboard Financeiro</h3>
-
-      <!-- Se houver URL do PowerBI, usa iframe. Caso contrário, mostra gráficos nativos. -->
-      <div *ngIf="powerBiUrl(); else nativeCharts" class="pbi-wrap">
-        <iframe [src]="powerBiUrl() | safeUrl" frameborder="0" allowfullscreen></iframe>
-      </div>
-
-      <ng-template #nativeCharts>
-        <div class="charts">
-          <div class="card">
-            <h4>Fluxo do Mês</h4>
-            <canvas id="barChart"></canvas>
-          </div>
-          <div class="card">
-            <h4>Despesas por Categoria</h4>
-            <canvas id="donutChart"></canvas>
+    <!-- Card de Metas Financeiras -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card text-white p-3" style="background-color:#181c1f">
+          <h5 class="card-title">🎯 Metas Financeiras</h5>
+          <div class="progress bg-dark" style="height: 10px;">
+            <div class="progress-bar bg-success" style="width: 70%;"></div>
           </div>
         </div>
-      </ng-template>
-    </section>
+      </div>
 
+      <!-- Card de Conquistas-->
+      <div class="col-md-4">
+        <div class="card text-white p-3" style="background-color:#181c1f">
+          <h5 class="card-title" >🏆 Conquistas</h5>
+          <p style="height: 10px;">27 / 200</p>
+        </div>
+      </div>
+
+      <!-- Card do Nível de Experiência-->
+      <div class="col-md-4">
+        <div class="card text-white p-3" style="background-color:#181c1f">
+          <h5 class="card-title" >Nível Atual 2</h5>
+          <div class="progress bg-dark" style="height: 10px;">
+            <div class="progress-bar bg-success" style="width: 80%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Texto Explicativo -->
+    <p class="text-warning medium  mb-4">
+      ✨ Cada transação registrada te ajuda a evoluir e desbloquear novas funcionalidades.
+    </p>
+
+    <!-- Card do DashBoard -->
+    <div class="card text-white p-4" style="background-color:#181c1f">
+      <h5 class="card-title mb-2">Dashboard Financeiro</h5>
+      <canvas id="financeChart" style="height: 350px;"></canvas>
+    </div>    
   </main>
 </div>
+
+<!-- Painel flutuante de Perfil -->
+<app-profile-panel
+  [open]="showProfile()"
+  (close)="closeProfile()">
+</app-profile-panel>
