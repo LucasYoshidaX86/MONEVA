@@ -104,4 +104,18 @@ export class TransactionsService {
       updatedAt: serverTimestamp()
     });
   }
+
+  async update(
+    id: string,
+    patch: Partial<Pick<TransacaoDoc, 'valor' | 'categoria' | 'meio' | 'obs'>>
+  ) {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('not-authenticated');
+
+    const ref = doc(this.fs, `users/${user.uid}/transactions/${id}`);
+    await updateDoc(ref, {
+      ...patch,
+      updatedAt: serverTimestamp()
+    } as any);
+  }
 }

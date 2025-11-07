@@ -428,3 +428,14 @@ input, select {
   .grid { grid-template-columns:1fr; }
   .bubble { --R:calc(50% + 130px); }
 }
+
+
+.edit-link{
+  text-decoration: underline;
+  cursor: pointer;
+  color: #bfe9cf;      /* tom do chip de saldo */
+  font-weight: 600;
+  margin-right: 6px;
+  font-size: small;
+}
+.edit-link:hover{ color: #00c053; }  /* verde-padrão */

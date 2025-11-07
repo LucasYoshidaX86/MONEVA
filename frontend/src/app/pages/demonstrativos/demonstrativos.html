@@ -77,7 +77,11 @@
       @for (t of filtered(); track t.id) {
         <div class="rowi">
           <div class="left">
-            <div class="cat">{{ t.categoria }}</div>
+            <div class="cat">
+              {{ t.categoria }} • 
+              <span class="edit-link"
+                    (click)="abrirEditar(t); $event.stopPropagation()">Editar</span>
+            </div>
             <small class="muted">{{ (t.meio | titlecase) }} • {{ t.date.toDate() | date:'dd/MM' }}</small>
             <small class="muted" *ngIf="t.obs">— {{ t.obs }}</small>
           </div>
@@ -248,3 +252,47 @@
     </div>
   </div>
 }
+
+<!-- Modal Editar Transação -->
+@if (showEdit()) {
+  <div class="modal" (click)="fecharEditar()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h5 class="mb-2 text-white">Editar movimentação</h5>
+
+      <div class="grid">
+        <label>Categoria
+          <select [(ngModel)]="formEdit.categoria">
+            @for (c of categorias; track c.nome) {
+              <option [value]="c.nome">{{ c.emoji }} {{ c.nome }}</option>
+            }
+          </select>
+        </label>
+
+        <label>Valor (R$)
+          <input type="number" step="0.01" min="0" [(ngModel)]="formEdit.valor" />
+        </label>
+
+        <label>Meio
+          <select [(ngModel)]="formEdit.meio">
+            <option value="pix">PIX</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="debito">Débito</option>
+            <option value="credito">Crédito</option>
+            <option value="boleto">Boleto</option>
+            <option value="outro">Outro</option>
+          </select>
+        </label>
+
+        <label class="full">Observação
+          <input type="text" [(ngModel)]="formEdit.obs" />
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn ghost" (click)="fecharEditar()">Cancelar</button>
+        <button class="btn solid" (click)="salvarEdicao()">Salvar</button>
+      </div>
+    </div>
+  </div>
+}
+

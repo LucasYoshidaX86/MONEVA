@@ -1,12 +1,10 @@
 import { Component, AfterViewInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe, DatePipe, TitleCasePipe, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Chart } from 'chart.js/auto';
 import { RouterLink } from '@angular/router';
 import { TransactionsService, TransacaoDoc, Tipo, Meio } from '../../core/transactions.service';
 import { Timestamp } from '@angular/fire/firestore';
-import { DOCUMENT } from '@angular/common';
-
 
 type Filtro = {
   tipo: 'todas' | 'entrada' | 'saida';
@@ -28,14 +26,17 @@ const DEFAULT_FILTRO: Filtro = {
   valor: null
 };
 
+// meios válidos (mantém compatível com rules e com o tipo Meio)
+const MEIOS_VALIDOS = ['pix','dinheiro','debito','credito','boleto','outro'] as const;
+type MeioValido = typeof MEIOS_VALIDOS[number];
+
 @Component({
   selector: 'app-demonstrativos',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, DecimalPipe, DatePipe, TitleCasePipe],
   templateUrl: './demonstrativos.html',
   styleUrl: './demonstrativos.scss'
 })
-
 export class Demonstrativos implements AfterViewInit, OnDestroy {
   private tx = inject(TransactionsService);
   private doc = inject(DOCUMENT);
@@ -211,10 +212,8 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
 
   fecharAdd() { this.showAdd.set(false); }
 
-  // dentro de Demonstrativos
   async salvarTransacao() {
     const n = this.novo;
-    // validações simples
     if (!n.tipo || !n.categoria || n.valor == null || !n.date || !n.meio) {
       alert('Preencha todos os campos obrigatórios.');
       return;
@@ -236,7 +235,7 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
         obs: n.obs ?? ''
       } as TransacaoDoc);
 
-      // Ajusta o mês exibido para o mês da transação salva (para ela aparecer já)
+      // Ajusta o mês exibido para o mês da transação salva
       const d = n.date.toDate();
       const mKey = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
       const viewKey = `${this.ano()}-${String(this.mes()+1).padStart(2,'0')}`;
@@ -301,14 +300,14 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
     io.observe(saldo);
   }
 
-
   // ===== Ações do topo =====
   abrirFiltro(){ this.showFilter.set(true); }
   fecharFiltro(){ this.showFilter.set(false); }
   abrirBusca(){ this.showSearch.set(true); }
   fecharBusca(){ this.showSearch.set(false); }
   abrirMenu(){ this.showMenu.set(!this.showMenu()); }
-  // sinais para lixeira
+
+  // lixeira
   trash = signal<TransacaoDoc[]>([]);
   trashLoading = signal(false);
 
@@ -329,7 +328,6 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
   async restaurar(item: TransacaoDoc){
     try {
       await this.tx.restore(item.id!);
-      // remove local da lista
       this.trash.update(arr => arr.filter(x => x.id !== item.id));
     } catch(e){
       console.error(e);
@@ -337,17 +335,67 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
     }
   }
 
-
-  // ++++ NOVO: mudar tema sem usar `document` no template
+  // tema
   setTheme(mode: 'dark' | 'light' | '') {
     this.doc.body.dataset['theme'] = mode;
     this.showMenu.set(false);
   }
 
-  // ++++ NOVO: tratar mudança do campo "valor" da busca
+  // busca por valor
   onValorChange(val: any) {
     const v = (val === '' || val === null || val === undefined) ? null : Number(val);
     this.updateFiltro('valor', (v !== null && Number.isNaN(v)) ? null : v);
   }
-}
 
+  // ====== Edição ======
+  showEdit = signal(false);
+  formEdit: { id?: string; categoria: string; valor: number; meio: MeioValido; obs: string | null } = {
+    categoria: '', valor: 0, meio: 'pix', obs: null
+  };
+
+  abrirEditar(t: TransacaoDoc) {
+    this.formEdit = {
+      id: t.id!,
+      categoria: t.categoria,
+      valor: Number(t.valor) || 0,
+      meio: (t.meio as MeioValido) ?? 'pix',
+      obs: t.obs ?? null,
+    };
+    this.showEdit.set(true);
+  }
+
+  fecharEditar() {
+    this.showEdit.set(false);
+  }
+
+  async salvarEdicao() {
+    const id = this.formEdit.id!;
+    const valor = Number(this.formEdit.valor);
+    const categoria = (this.formEdit.categoria || '').trim();
+    const meio = this.formEdit.meio;
+    const obsClean = (this.formEdit.obs ?? '').trim(); // <- normaliza
+
+    if (!id) return;
+    if (!categoria) { alert('Informe a categoria.'); return; }
+    if (!isFinite(valor) || valor <= 0) { alert('Informe um valor válido.'); return; }
+    if (!['pix','dinheiro','debito','credito','boleto','outro'].includes(meio)) {
+      alert('Selecione um meio de pagamento válido.');
+      return;
+    }
+
+    try {
+      // Só inclui "obs" no patch se houver conteúdo
+      const patch: Partial<Pick<TransacaoDoc,'valor'|'categoria'|'meio'|'obs'>> = {
+        valor, categoria, meio,
+        ...(obsClean ? { obs: obsClean } : {}) // <- não manda null
+      };
+
+      await this.tx.update(id, patch);
+      this.showEdit.set(false);
+    } catch (e:any) {
+      console.error(e);
+      alert('Não foi possível salvar a edição. Tente novamente.');
+    }
+  }
+
+}
