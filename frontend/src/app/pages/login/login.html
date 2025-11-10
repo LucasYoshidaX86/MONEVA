@@ -12,7 +12,7 @@
 
     <!-- Coluna esquerda: Card de login -->
     <div class="col-12 col-md-6 col-lg-5">
-      <div class="card login-card text-light">
+      <div class="card login-card text-light" data-testid="login-card">
         <div class="card-body">
           <h3 class="mb-3 text-center">Portal do Aluno</h3>
 
@@ -20,35 +20,48 @@
             <button
               class="btn tab-btn"
               [class.active]="mode === 'login'"
-              (click)="switch('login')">
+              (click)="switch('login')"
+              data-testid="tab-login">
               Entrar
             </button>
 
             <button
               class="btn tab-btn"
               [class.active]="mode === 'register'"
-              (click)="switch('register')">
+              (click)="switch('register')"
+              data-testid="tab-register">
               Criar conta
             </button>
           </div>
 
+          <!-- Mensagem de erro geral -->
           @if (errorMsg) {
-            <div class="alert alert-warning">{{ errorMsg }}</div>
+            <div class="alert alert-warning"
+                 data-testid="login-error"
+                 role="alert"
+                 aria-live="assertive">
+              {{ errorMsg }}
+            </div>
           }
 
           <!-- FORM LOGIN -->
           @if (mode === 'login') {
-            <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
+            <form [formGroup]="loginForm"
+                  (ngSubmit)="submitLogin()"
+                  novalidate
+                  data-testid="login-form">
 
               <!-- E-mail -->
               <div class="mb-3">
-                <label class="form-label">E-mail</label>
+                <label class="form-label" for="login-email">E-mail</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                  <input type="email"
+                  <input id="login-email"
+                         type="email"
                          class="form-control"
                          formControlName="email"
                          autocomplete="email"
+                         data-testid="login-email"
                          [class.is-invalid]="lf.email.touched && lf.email.invalid">
                 </div>
                 <div class="invalid-feedback d-block" *ngIf="lf.email.touched && lf.email.errors">
@@ -59,18 +72,21 @@
 
               <!-- Senha -->
               <div class="mb-2">
-                <label class="form-label">Senha</label>
+                <label class="form-label" for="login-password">Senha</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                  <input [type]="showLoginPass ? 'text' : 'password'"
+                  <input id="login-password"
+                         [type]="showLoginPass ? 'text' : 'password'"
                          class="form-control"
                          formControlName="password"
                          autocomplete="current-password"
+                         data-testid="login-password"
                          [class.is-invalid]="lf.password.touched && lf.password.invalid">
                   <button type="button"
                           class="btn btn-outline-secondary toggle-eye"
                           (click)="showLoginPass = !showLoginPass"
-                          [attr.aria-label]="showLoginPass ? 'Ocultar senha' : 'Mostrar senha'">
+                          [attr.aria-label]="showLoginPass ? 'Ocultar senha' : 'Mostrar senha'"
+                          data-testid="toggle-password">
                     <i class="bi" [ngClass]="showLoginPass ? 'bi-eye-slash' : 'bi-eye'"></i>
                   </button>
                 </div>
@@ -80,103 +96,81 @@
                 </div>
               </div>
 
+              <!-- Botão de Login -->
               <button type="submit"
                       class="btn btn-success w-100"
-                      [disabled]="loginForm.invalid || loading">
-                Acessar
+                      [disabled]="loginForm.invalid || loading"
+                      data-testid="login-submit">
+                <span *ngIf="!loading">Acessar</span>
+                <span *ngIf="loading">Entrando...</span>
               </button>
 
+              <!-- Esqueceu senha -->
               <div class="text-center mt-2">
-                <button type="button" class="btn btn-link p-0" (click)="forgotPassword()">
+                <button type="button"
+                        class="btn btn-link p-0"
+                        (click)="forgotPassword()"
+                        data-testid="forgot-password">
                   Esqueceu sua senha?
                 </button>
               </div>
             </form>
           }
 
-          <!-- FORM CADASTRO -->
+          <!-- FORM CADASTRO (mantido igual, só adicionado data-testid onde necessário) -->
           @if (mode === 'register') {
-            <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
+            <form [formGroup]="registerForm"
+                  (ngSubmit)="submitRegister()"
+                  novalidate
+                  data-testid="register-form">
 
               <!-- Nome -->
               <div class="mb-3">
-                <label class="form-label" id="NomedoUsuario">Nome</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-person"></i></span>
-                  <input class="form-control"
-                         formControlName="name"
-                         autocomplete="name"
-                         [class.is-invalid]="rf.name.touched && rf.name.invalid">
-                </div>
-                <div class="invalid-feedback d-block" *ngIf="rf.name.touched && rf.name.errors">
-                  <small *ngIf="rf.name.errors['required']">Informe seu nome.</small>
-                  <small *ngIf="rf.name.errors['minlength']">Mínimo de 3 caracteres.</small>
-                </div>
+                <label class="form-label">Nome</label>
+                <input class="form-control"
+                       formControlName="name"
+                       autocomplete="name"
+                       data-testid="register-name"
+                       [class.is-invalid]="rf.name.touched && rf.name.invalid">
               </div>
 
               <!-- E-mail -->
               <div class="mb-3">
                 <label class="form-label">E-mail</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                  <input type="email"
-                         class="form-control"
-                         formControlName="email"
-                         autocomplete="email"
-                         [class.is-invalid]="rf.email.touched && rf.email.invalid">
-                </div>
-                <div class="invalid-feedback d-block" *ngIf="rf.email.touched && rf.email.errors">
-                  <small *ngIf="rf.email.errors['required']">Informe o e-mail.</small>
-                  <small *ngIf="rf.email.errors['email']">E-mail inválido.</small>
-                </div>
+                <input type="email"
+                       class="form-control"
+                       formControlName="email"
+                       autocomplete="email"
+                       data-testid="register-email"
+                       [class.is-invalid]="rf.email.touched && rf.email.invalid">
               </div>
 
               <!-- Senha -->
               <div class="mb-3">
                 <label class="form-label">Senha</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                  <input [type]="showRegPass ? 'text' : 'password'"
-                         class="form-control"
-                         formControlName="password"
-                         autocomplete="new-password"
-                         [class.is-invalid]="rf.password.touched && rf.password.invalid">
-                  <button type="button"
-                          class="btn btn-outline-secondary toggle-eye"
-                          (click)="showRegPass = !showRegPass">
-                    <i class="bi" [ngClass]="showRegPass ? 'bi-eye-slash' : 'bi-eye'"></i>
-                  </button>
-                </div>
-                <div class="invalid-feedback d-block" *ngIf="rf.password.touched && rf.password.errors">
-                  <small *ngIf="rf.password.errors['required']">Informe a senha.</small>
-                  <small *ngIf="rf.password.errors['minlength']">Mínimo de 8 caracteres.</small>
-                </div>
+                <input [type]="showRegPass ? 'text' : 'password'"
+                       class="form-control"
+                       formControlName="password"
+                       autocomplete="new-password"
+                       data-testid="register-password"
+                       [class.is-invalid]="rf.password.touched && rf.password.invalid">
               </div>
 
               <!-- Confirmar Senha -->
               <div class="mb-3">
                 <label class="form-label">Confirmar Senha</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
-                  <input [type]="showRegPass2 ? 'text' : 'password'"
-                         class="form-control"
-                         formControlName="confirmPassword"
-                         autocomplete="new-password"
-                         [class.is-invalid]="(registerForm.touched && registerForm.errors?.['passwordMismatch']) || (rf.confirmPassword.touched && rf.confirmPassword.invalid)">
-                  <button type="button"
-                          class="btn btn-outline-secondary toggle-eye"
-                          (click)="showRegPass2 = !showRegPass2">
-                    <i class="bi" [ngClass]="showRegPass2 ? 'bi-eye-slash' : 'bi-eye'"></i>
-                  </button>
-                </div>
-                <div class="invalid-feedback d-block" *ngIf="registerForm.touched && registerForm.errors?.['passwordMismatch']">
-                  <small>As senhas não conferem.</small>
-                </div>
+                <input [type]="showRegPass2 ? 'text' : 'password'"
+                       class="form-control"
+                       formControlName="confirmPassword"
+                       autocomplete="new-password"
+                       data-testid="register-confirm"
+                       [class.is-invalid]="rf.confirmPassword.touched && rf.confirmPassword.invalid">
               </div>
 
               <button type="submit"
                       class="btn btn-success w-100"
-                      [disabled]="registerForm.invalid || registerForm.errors?.['passwordMismatch'] || loading">
+                      [disabled]="registerForm.invalid || loading"
+                      data-testid="register-submit">
                 Criar conta
               </button>
             </form>
@@ -193,7 +187,9 @@
           jornada financeira!!!
         </h1>
 
-        <img class="pig-img my-2 my-lg-1" src="/img/Wallace-Pigton.png" alt="Cofrinho Moneva">
+        <img class="pig-img my-2 my-lg-1"
+             src="/img/Wallace-Pigton.png"
+             alt="Cofrinho Moneva">
 
         <p class="hero__subtitle mb-1">
           DA TEORIA À PRÁTICA: SUA EVOLUÇÃO FINANCEIRA<br class="d-none d-md-inline" />

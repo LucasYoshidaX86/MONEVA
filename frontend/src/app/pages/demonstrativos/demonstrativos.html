@@ -4,41 +4,42 @@
     <ul class="nav flex-column">
       <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/home">🏠 Home</a></li>
       <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/trilha">💰 Trilha de Aprendizado</a></li>
-      <li class="nav-item mb-2"><a class="nav-link aside text-white active" routerLink="/demonstrativos">📊 Demonstrativos</a></li>
+      <li class="nav-item mb-2"><a class="nav-link aside text-white active" routerLink="/demonstrativos" data-testid="nav-demonstrativos">📊 Demonstrativos</a></li>
       <li class="nav-item"><a class="nav-link text-white" routerLink="/conquistas">🏆 Conquistas</a></li>
     </ul>
   </aside>
 
-  <main class="main">
+  <main class="main" data-testid="demonstrativos-root">
     <header class="topbar">
       <div class="brand">
         <div class="logo">Moneva</div>
         <small class="muted">Todas as contas</small>
       </div>
 
-      <div class="month-nav">
-        <button class="icon-btn" (click)="mudarMes(-1)"><i class="bi bi-chevron-left"></i></button>
-        <span class="month">{{ nomeMes() }}</span>
-        <button class="icon-btn" (click)="mudarMes(1)"><i class="bi bi-chevron-right"></i></button>
+      <div class="month-nav" data-testid="month-nav">
+        <button class="icon-btn" (click)="mudarMes(-1)" data-testid="month-prev"><i class="bi bi-chevron-left"></i></button>
+        <span class="month" data-testid="month-name">{{ nomeMes() }}</span>
+        <button class="icon-btn" (click)="mudarMes(1)" data-testid="month-next"><i class="bi bi-chevron-right"></i></button>
       </div>
 
       <div class="actions">
-        <button class="icon-btn" (click)="abrirFiltro()"><i class="bi bi-funnel"></i></button>
+        <button class="icon-btn" (click)="abrirFiltro()" data-testid="filter-open"><i class="bi bi-funnel"></i></button>
 
         @if (hasFilter()) {
-          <button class="pill-btn clear" (click)="resetFiltro()">Remover filtro</button>
+          <button class="pill-btn clear" (click)="resetFiltro()" data-testid="filter-clear">Remover filtro</button>
         }
 
-        <button class="icon-btn" (click)="abrirBusca()"><i class="bi bi-search"></i></button>
-        <div class="menu-wrap">
-          <button class="icon-btn" (click)="abrirMenu()"><i class="bi bi-three-dots-vertical"></i></button>
+        <button class="icon-btn" (click)="abrirBusca()" data-testid="search-open"><i class="bi bi-search"></i></button>
+
+        <div class="menu-wrap" data-testid="menu-wrap">
+          <button class="icon-btn" (click)="abrirMenu()" data-testid="menu-open"><i class="bi bi-three-dots-vertical"></i></button>
           @if (showMenu()) {
-            <div class="menu-card">
-              <button class="menu-item" (click)="setTheme('dark')">Tema escuro</button>
-              <button class="menu-item" (click)="setTheme('light')">Tema claro</button>
-              <button class="menu-item" (click)="setTheme('')">Tema padrão</button>
+            <div class="menu-card" data-testid="menu-card">
+              <button class="menu-item" (click)="setTheme('dark')" data-testid="menu-theme-dark">Tema escuro</button>
+              <button class="menu-item" (click)="setTheme('light')" data-testid="menu-theme-light">Tema claro</button>
+              <button class="menu-item" (click)="setTheme('')" data-testid="menu-theme-default">Tema padrão</button>
               <hr>
-              <button class="menu-item danger" (click)="abrirLixeira()">Abrir lixeira</button>
+              <button class="menu-item danger" (click)="abrirLixeira()" data-testid="trash-open">Abrir lixeira</button>
             </div>
           }
         </div>
@@ -46,106 +47,137 @@
     </header>
 
     <!-- Gráfico -->
-    <section class="ring-area">
+    <section class="ring-area" data-testid="ring-area">
       <div class="ring-wrap">
         <canvas id="ringChart"></canvas>
 
         <!-- Centro do gráfico -->
         <div class="ring-center">
-          <div class="in-label">Entradas<br>R$ {{ totalEntradas() | number:'1.2-2' }}</div>
-          <div class="out-label">Saídas<br>R$ {{ totalSaidas() | number:'1.2-2' }}</div>
+          <div class="in-label" data-testid="total-in">Entradas<br>R$ {{ totalEntradas() | number:'1.2-2' }}</div>
+          <div class="out-label" data-testid="total-out">Saídas<br>R$ {{ totalSaidas() | number:'1.2-2' }}</div>
         </div>
       </div>
     </section>
 
     <!-- Saldo + botões fixos -->
-    <section class="saldo-bar">
+    <section class="saldo-bar" data-testid="saldo-bar">
       <div class="saldo-row">
-        <button class="mini-fab minus" (click)="abrirAdd('saida')">−</button>
+        <!-- ABRIR ADD DESPESA (saida) -->
+        <button class="mini-fab minus" (click)="abrirAdd('saida')" data-testid="add-expense-open">−</button>
 
         <div class="saldo-chip">
           <span>Saldo</span>
-          <strong>R$ {{ saldo() | number:'1.2-2' }}</strong>
+          <strong data-testid="saldo-value">R$ {{ saldo() | number:'1.2-2' }}</strong>
         </div>
 
-        <button class="mini-fab plus" (click)="abrirAdd('entrada')">+</button>
+        <!-- ABRIR ADD ENTRADA (entrada) -->
+        <button class="mini-fab plus" (click)="abrirAdd('entrada')" data-testid="add-income-open">+</button>
       </div>
     </section>
 
     <!-- Lista -->
-    <section class="history">
+    <section class="history" data-testid="history-list">
       @for (t of filtered(); track t.id) {
-        <div class="rowi">
+        <div class="rowi" [attr.data-id]="t.id" data-testid="history-item">
           <div class="left">
             <div class="cat">
-              {{ t.categoria }} • 
+              <span data-testid="item-category">{{ t.categoria }}</span> • 
               <span class="edit-link"
-                    (click)="abrirEditar(t); $event.stopPropagation()">Editar</span>
+                    (click)="abrirEditar(t); $event.stopPropagation()"
+                    data-testid="item-edit-open">Editar</span>
             </div>
-            <small class="muted">{{ (t.meio | titlecase) }} • {{ t.date.toDate() | date:'dd/MM' }}</small>
-            <small class="muted" *ngIf="t.obs">— {{ t.obs }}</small>
+            <small class="muted">
+              <span data-testid="item-meio">{{ (t.meio | titlecase) }}</span> • 
+              <span data-testid="item-date">{{ t.date.toDate() | date:'dd/MM' }}</span>
+            </small>
+            <small class="muted" *ngIf="t.obs">— <span data-testid="item-obs">{{ t.obs }}</span></small>
           </div>
           <div class="right" [class.in]="t.tipo==='entrada'" [class.out]="t.tipo==='saida'">
-            {{ t.tipo==='entrada' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
+            <span data-testid="item-sign">{{ t.tipo==='entrada' ? '+' : '-' }}</span>
+            R$ <span data-testid="item-value">{{ t.valor | number:'1.2-2' }}</span>
           </div>
-          <button class="trash" (click)="confirmarExcluir(t.id!)"><i class="bi bi-trash"></i></button>
+          <button class="trash" (click)="confirmarExcluir(t.id!)" data-testid="item-delete">
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
       }
     </section>
 
     <!-- FAB inteligentes: aparecem quando o saldo sai de vista -->
-    <div class="fab-smart">
-      <button class="fab small plus" (click)="abrirAdd('entrada')">+</button>
-      <button class="fab small minus" (click)="abrirAdd('saida')">−</button>
+    <div class="fab-smart" data-testid="fab-smart">
+      <button class="fab small plus" (click)="abrirAdd('entrada')" data-testid="fab-add-income">+</button>
+      <button class="fab small minus" (click)="abrirAdd('saida')" data-testid="fab-add-expense">−</button>
     </div>
   </main>
 </div>
 
 <!-- Modal Adicionar -->
 @if (showAdd()) {
-  <div class="modal">
-    <div class="modal-card">
-      <h5 class="mb-2 text-white">{{ novo.tipo==='entrada' ? 'Nova Entrada' : 'Nova Despesa' }}</h5>
+  <div class="modal" data-testid="add-modal" (click)="fecharAdd()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h5 class="mb-2 text-white" data-testid="add-title">
+        {{ novo.tipo==='entrada' ? 'Nova Entrada' : 'Nova Despesa' }}
+      </h5>
+
       <div class="grid">
         <label>Data
-          <input type="date" [value]="dateToInput(novo.date)" (change)="onDateChange($event)" />
+          <input type="date"
+                 id="add-date"
+                 [value]="dateToInput(novo.date)"
+                 (change)="onDateChange($event)"
+                 data-testid="add-date" />
         </label>
+
         <label>Meio
-          <select [(ngModel)]="novo.meio">
+          <select [(ngModel)]="novo.meio" id="add-meio" data-testid="add-meio">
             <option value="pix">PIX</option><option value="dinheiro">Dinheiro</option>
             <option value="debito">Débito</option><option value="credito">Crédito</option>
             <option value="boleto">Boleto</option><option value="outro">Outro</option>
           </select>
         </label>
+
         <label>Categoria
-          <select [(ngModel)]="novo.categoria">
-            @for (c of categorias; track c.nome) { <option [value]="c.nome">{{ c.emoji }} {{ c.nome }}</option> }
+          <select [(ngModel)]="novo.categoria" id="add-categoria" data-testid="add-categoria">
+            @for (c of categorias; track c.nome) {
+              <option [value]="c.nome">{{ c.emoji }} {{ c.nome }}</option>
+            }
           </select>
         </label>
+
         <label>Valor (R$)
-          <input type="number" step="0.01" min="0" [(ngModel)]="novo.valor" />
+          <input type="number"
+                 step="0.01"
+                 min="0"
+                 [(ngModel)]="novo.valor"
+                 id="add-valor"
+                 data-testid="add-valor" />
         </label>
+
         <label class="full">Observação
-          <input type="text" [(ngModel)]="novo.obs" />
+          <input type="text"
+                 [(ngModel)]="novo.obs"
+                 id="add-obs"
+                 data-testid="add-obs" />
         </label>
       </div>
+
       <div class="modal-actions">
-        <button class="btn ghost" (click)="fecharAdd()">Cancelar</button>
-        <button class="btn solid" (click)="salvarTransacao()">Salvar</button>
+        <button class="btn ghost" (click)="fecharAdd()" data-testid="add-cancel">Cancelar</button>
+        <button class="btn solid" (click)="salvarTransacao()" data-testid="add-save">Salvar</button>
       </div>
     </div>
   </div>
 }
 
-<!-- Modal Confirmação -->
+<!-- Modal Confirmação (excluir) -->
 @if (showConfirm().open) {
-  <div class="modal">
-    <div class="modal-card confirm">
+  <div class="modal" data-testid="confirm-modal" (click)="cancelarExcluir()">
+    <div class="modal-card confirm" (click)="$event.stopPropagation()">
       <h5 class="mb-3">Confirmar exclusão</h5>
       <p class="text-white">Deseja realmente enviar esta movimentação para a lixeira?</p>
       <div class="modal-actions">
-        <button class="btn ghost" (click)="cancelarExcluir()">Cancelar</button>
-        <button class="btn danger" (click)="excluirConfirmado()">Excluir</button>
+        <button class="btn ghost" (click)="cancelarExcluir()" data-testid="confirm-cancel">Cancelar</button>
+        <button class="btn danger" (click)="excluirConfirmado()" data-testid="confirm-delete">Excluir</button>
       </div>
     </div>
   </div>
@@ -153,19 +185,19 @@
 
 <!-- Modal Filtro -->
 @if (showFilter()) {
-  <div class="modal" (click)="fecharFiltro()">
+  <div class="modal" (click)="fecharFiltro()" data-testid="filter-modal">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <h5 class="mb-2">Filtros</h5>
       <div class="grid">
         <label>Tipo
-          <select [ngModel]="filtro().tipo" (ngModelChange)="updateFiltro('tipo', $event)">
+          <select [ngModel]="filtro().tipo" (ngModelChange)="updateFiltro('tipo', $event)" data-testid="filter-tipo">
             <option value="todas">Todas</option>
             <option value="entrada">Entradas</option>
             <option value="saida">Despesas</option>
           </select>
         </label>
         <label>Meio
-          <select [ngModel]="filtro().meio" (ngModelChange)="updateFiltro('meio', $event)">
+          <select [ngModel]="filtro().meio" (ngModelChange)="updateFiltro('meio', $event)" data-testid="filter-meio">
             <option value="todos">Todos</option>
             <option value="pix">PIX</option><option value="dinheiro">Dinheiro</option>
             <option value="debito">Débito</option><option value="credito">Crédito</option>
@@ -173,23 +205,23 @@
           </select>
         </label>
         <label>Categoria
-          <select [ngModel]="filtro().categoria" (ngModelChange)="updateFiltro('categoria', $event)">
+          <select [ngModel]="filtro().categoria" (ngModelChange)="updateFiltro('categoria', $event)" data-testid="filter-categoria">
             <option value="todas">Todas</option>
             @for (c of categorias; track c.nome) { <option [value]="c.nome">{{ c.nome }}</option> }
           </select>
         </label>
         <label>De
-          <input type="date" [ngModel]="filtro().start" (ngModelChange)="updateFiltro('start', $event)" />
+          <input type="date" [ngModel]="filtro().start" (ngModelChange)="updateFiltro('start', $event)" data-testid="filter-start" />
         </label>
         <label>Até
-          <input type="date" [ngModel]="filtro().end" (ngModelChange)="updateFiltro('end', $event)" />
+          <input type="date" [ngModel]="filtro().end" (ngModelChange)="updateFiltro('end', $event)" data-testid="filter-end" />
         </label>
       </div>
       <div class="modal-actions">
         @if (hasFilter()) {
-          <button class="btn ghost" (click)="resetFiltro()">Limpar</button>
+          <button class="btn ghost" (click)="resetFiltro()" data-testid="filter-reset">Limpar</button>
         }
-        <button class="btn ghost" (click)="fecharFiltro()">Fechar</button>
+        <button class="btn ghost" (click)="fecharFiltro()" data-testid="filter-close">Fechar</button>
       </div>
     </div>
   </div>
@@ -197,20 +229,19 @@
 
 <!-- Modal Busca -->
 @if (showSearch()) {
-  <div class="modal" (click)="fecharBusca()">
+  <div class="modal" (click)="fecharBusca()" data-testid="search-modal">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <h5 class="mb-2">Buscar</h5>
       <div class="grid">
         <label class="full">Texto na observação
-          <input type="text" [ngModel]="filtro().q" (ngModelChange)="updateFiltro('q', $event)" />
+          <input type="text" [ngModel]="filtro().q" (ngModelChange)="updateFiltro('q', $event)" data-testid="search-q" />
         </label>
         <label>Valor igual a (R$)
-          <input type="number" step="0.01" [ngModel]="filtro().valor"
-                 (ngModelChange)="onValorChange($event)" />
+          <input type="number" step="0.01" [ngModel]="filtro().valor" (ngModelChange)="onValorChange($event)" data-testid="search-valor" />
         </label>
       </div>
       <div class="modal-actions">
-        <button class="btn ghost" (click)="fecharBusca()">Fechar</button>
+        <button class="btn ghost" (click)="fecharBusca()" data-testid="search-close">Fechar</button>
       </div>
     </div>
   </div>
@@ -218,27 +249,30 @@
 
 <!-- Modal Lixeira -->
 @if (showTrash()) {
-  <div class="modal" (click)="fecharLixeira()">
+  <div class="modal" (click)="fecharLixeira()" data-testid="trash-modal">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <h5 class="mb-2">Lixeira</h5>
       @if (trashLoading()) {
-        <p class="text-white">Carregando...</p>
+        <p class="text-white" data-testid="trash-loading">Carregando...</p>
       } @else {
         @if (trash().length === 0) {
-          <p class="text-white">Nenhum item na lixeira.</p>
+          <p class="text-white" data-testid="trash-empty">Nenhum item na lixeira.</p>
         } @else {
-          <div class="history">
+          <div class="history" data-testid="trash-list">
             @for (t of trash(); track t.id) {
-              <div class="rowi">
+              <div class="rowi" [attr.data-id]="t.id" data-testid="trash-item">
                 <div class="left">
-                  <div class="cat">{{ t.categoria }}</div>
-                  <small class="muted">{{ (t.meio | titlecase) }} • {{ t.date.toDate() | date:'dd/MM' }}</small>
-                  <small class="muted" *ngIf="t.obs">— {{ t.obs }}</small>
+                  <div class="cat" data-testid="trash-item-category">{{ t.categoria }}</div>
+                  <small class="muted">
+                    <span data-testid="trash-item-meio">{{ (t.meio | titlecase) }}</span> •
+                    <span data-testid="trash-item-date">{{ t.date.toDate() | date:'dd/MM' }}</span>
+                  </small>
+                  <small class="muted" *ngIf="t.obs">— <span data-testid="trash-item-obs">{{ t.obs }}</span></small>
                 </div>
                 <div class="right" [class.in]="t.tipo==='entrada'" [class.out]="t.tipo==='saida'">
-                  {{ t.tipo==='entrada' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
+                  {{ t.tipo==='entrada' ? '+' : '-' }} R$ <span data-testid="trash-item-value">{{ t.valor | number:'1.2-2' }}</span>
                 </div>
-                <button class="trash" (click)="restaurar(t)">
+                <button class="trash" (click)="restaurar(t)" data-testid="trash-restore">
                   <i class="bi bi-arrow-counterclockwise"></i>
                 </button>
               </div>
@@ -247,7 +281,7 @@
         }
       }
       <div class="modal-actions">
-        <button class="btn ghost" (click)="fecharLixeira()">Fechar</button>
+        <button class="btn ghost" (click)="fecharLixeira()" data-testid="trash-close">Fechar</button>
       </div>
     </div>
   </div>
@@ -255,13 +289,13 @@
 
 <!-- Modal Editar Transação -->
 @if (showEdit()) {
-  <div class="modal" (click)="fecharEditar()">
+  <div class="modal" (click)="fecharEditar()" data-testid="edit-modal">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <h5 class="mb-2 text-white">Editar movimentação</h5>
 
       <div class="grid">
         <label>Categoria
-          <select [(ngModel)]="formEdit.categoria">
+          <select [(ngModel)]="formEdit.categoria" id="edit-categoria" data-testid="edit-categoria">
             @for (c of categorias; track c.nome) {
               <option [value]="c.nome">{{ c.emoji }} {{ c.nome }}</option>
             }
@@ -269,11 +303,11 @@
         </label>
 
         <label>Valor (R$)
-          <input type="number" step="0.01" min="0" [(ngModel)]="formEdit.valor" />
+          <input type="number" step="0.01" min="0" [(ngModel)]="formEdit.valor" id="edit-valor" data-testid="edit-valor" />
         </label>
 
         <label>Meio
-          <select [(ngModel)]="formEdit.meio">
+          <select [(ngModel)]="formEdit.meio" id="edit-meio" data-testid="edit-meio">
             <option value="pix">PIX</option>
             <option value="dinheiro">Dinheiro</option>
             <option value="debito">Débito</option>
@@ -284,15 +318,14 @@
         </label>
 
         <label class="full">Observação
-          <input type="text" [(ngModel)]="formEdit.obs" />
+          <input type="text" [(ngModel)]="formEdit.obs" id="edit-obs" data-testid="edit-obs" />
         </label>
       </div>
 
       <div class="modal-actions">
-        <button class="btn ghost" (click)="fecharEditar()">Cancelar</button>
-        <button class="btn solid" (click)="salvarEdicao()">Salvar</button>
+        <button class="btn ghost" (click)="fecharEditar()" data-testid="edit-cancel">Cancelar</button>
+        <button class="btn solid" (click)="salvarEdicao()" data-testid="edit-save">Salvar</button>
       </div>
     </div>
   </div>
 }
-

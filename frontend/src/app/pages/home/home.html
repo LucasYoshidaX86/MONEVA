@@ -21,21 +21,23 @@
   <!-- Conteúdo principal -->
   <main class="flex-grow-1 p-4" style="background-color: #0f1113">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h3 class="fw-semibold">Fala Aí, {{ firstName() }}!</h3>
-      <div>
-        <!-- Botão Perfil (pílula com avatar duplo-anel) -->
-        <button type="button"
-                class="profile-cta"
-                (click)="openProfile()"
-                aria-label="Abrir painel de perfil">
-          <span class="profile-cta__label">Perfil</span>
+      <h3 class="fw-semibold" data-testid="home-welcome">Fala Aí, {{ firstName() }}!</h3>
 
-          <!-- Avatar com 2 anéis (externo verde + interno branco) -->
+      <div>
+        <!-- Botão Perfil (gatilho do painel) -->
+        <button
+          type="button"
+          class="profile-cta"
+          (click)="openProfile()"
+          aria-label="Abrir painel de perfil"
+          data-testid="profile-toggle">
+          <span class="profile-cta__label">Perfil</span>
           <span class="profile-cta__avatar" aria-hidden="true">
             <i class="bi bi-person-fill"></i>
           </span>
         </button>
-        <button class="btn btn-outline-light " style="border-radius: #00c053">⚙️</button>
+
+        <button class="btn btn-outline-light">⚙️</button>
       </div>
     </div>
 
@@ -53,7 +55,7 @@
       <!-- Card de Conquistas-->
       <div class="col-md-4">
         <div class="card text-white p-3" style="background-color:#181c1f">
-          <h5 class="card-title" >🏆 Conquistas</h5>
+          <h5 class="card-title">🏆 Conquistas</h5>
           <p style="height: 10px;">27 / 200</p>
         </div>
       </div>
@@ -61,7 +63,7 @@
       <!-- Card do Nível de Experiência-->
       <div class="col-md-4">
         <div class="card text-white p-3" style="background-color:#181c1f">
-          <h5 class="card-title" >Nível Atual 2</h5>
+          <h5 class="card-title">Nível Atual 2</h5>
           <div class="progress bg-dark" style="height: 10px;">
             <div class="progress-bar bg-success" style="width: 80%;"></div>
           </div>
@@ -70,7 +72,7 @@
     </div>
 
     <!-- Texto Explicativo -->
-    <p class="text-warning medium  mb-4">
+    <p class="text-warning medium mb-4">
       ✨ Cada transação registrada te ajuda a evoluir e desbloquear novas funcionalidades.
     </p>
 
@@ -78,7 +80,7 @@
     <div class="card text-white p-4" style="background-color:#181c1f">
       <h5 class="card-title mb-2">Dashboard Financeiro</h5>
       <canvas id="financeChart" style="height: 350px;"></canvas>
-    </div>    
+    </div>
   </main>
 </div>
 
