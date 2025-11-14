@@ -19,6 +19,7 @@ import { Introducao } from './pages/trilha/etapa01/fase01/introducao/introducao'
 import { QuizDinheiroComponent } from './pages/trilha/etapa01/fase02/quiz-dinheiro/quiz-dinheiro';
 import { EducacaoFinanceira } from './pages/trilha/etapa01/fase03/educacao-financeira/educacao-financeira';
 import { Reserva } from './pages/trilha/etapa01/fase04/reserva/reserva';
+import { PassosSimples } from './pages/trilha/etapa01/fase05/passos-simples/passos-simples';
 
 
 export const routes: Routes = [
@@ -47,7 +48,8 @@ export const routes: Routes = [
   { path: 'trilha/Introducao', component: Introducao, canActivate: [authGuard, onboardingGuard] },
   { path: 'trilha/quiz-dinheiro', component: QuizDinheiroComponent, canActivate: [authGuard, onboardingGuard]},
   { path: 'trilha/educacao-financeira', component: EducacaoFinanceira, canActivate: [authGuard, onboardingGuard] },
-  { path: 'trilha/Reserva', component: Reserva, canActivate: [authGuard, onboardingGuard] },
+  { path: 'trilha/reserva', component: Reserva, canActivate: [authGuard, onboardingGuard] },
+  {path:  'trilha/passos-simples', component: PassosSimples, canActivate: [authGuard, onboardingGuard] },
 
 
 

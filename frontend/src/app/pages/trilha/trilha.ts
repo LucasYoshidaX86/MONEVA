@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TrilhaProgressService, TrilhaSection, NodeStatus } from '../../trilha/trilha-progress';
+import { TrilhaProgressService, TrilhaSection, NodeStatus } from '../../core/trilha.service';
 
 // Declaração do componente Angular
 @Component({
@@ -59,8 +59,15 @@ export class Trilha {
   routeFor(id: string): string {
     return this.progress.routeFor(id);
   }
+
+  // Exibe XP total na topbar
+  totalXp(): number {
+    return this.progress.totalXp();
+  }
 }
 
+
+  
 
 
 

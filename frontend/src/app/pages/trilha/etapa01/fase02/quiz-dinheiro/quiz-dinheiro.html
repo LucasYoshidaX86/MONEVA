@@ -1,4 +1,5 @@
 <div class="game-wrapper">
+  <!-- Cabeçalho -->
   <header class="game-header">
     <div class="pill">Fase 02 — Jogo</div>
     <h1 class="game-title">
@@ -7,6 +8,7 @@
     <p class="game-sub">Responda V/F. Acerte tudo para concluir. 🚀</p>
   </header>
 
+  <!-- Dicas -->
   <section class="tips">
     @for (t of tips; track t.text) {
       <div class="tip">
@@ -16,6 +18,7 @@
     }
   </section>
 
+  <!-- Quiz -->
   <section class="quiz">
     <h2 class="quiz-title">Verdadeiro ou Falso?</h2>
 
@@ -23,34 +26,54 @@
       <div class="quiz-item">
         <div class="q-row">
           <div class="q-text">{{ q.text }}</div>
-
-          @if (reveal()) {
-            <div class="q-check" [class.ok]="q.user === q.answer" [class.bad]="q.user !== q.answer">
-              {{ q.user === q.answer ? '✅' : '❌' }}
-            </div>
-          }
         </div>
 
         <div class="q-actions">
-          <button class="btn opt" [class.active]="q.user==='V'" (click)="mark('V', i)">V</button>
-          <button class="btn opt" [class.active]="q.user==='F'" (click)="mark('F', i)">F</button>
+          <button
+            type="button"
+            class="btn opt"
+            [class.active]="q.user==='V'"
+            (click)="mark('V', i)">
+            V
+          </button>
+
+          <button
+            type="button"
+            class="btn opt"
+            [class.active]="q.user==='F'"
+            (click)="mark('F', i)">
+            F
+          </button>
         </div>
 
-        @if (reveal() && q.user !== q.answer) {
-          <div class="q-hint">
-            {{ q.answer === 'V' ? '💡 É VERDADEIRO.' : '💡 É FALSO.' }}
+        <!-- FEEDBACK POR PERGUNTA (só depois de CONCLUIR e se estiver errada) -->
+        @if (shouldShowStatus(q)) {
+          <div class="inline-feedback">
+            <span class="pill-status pill-status-error">
+              <span class="pill-truth">
+                {{ q.answer === 'V' ? 'É VERDADEIRO' : 'É FALSO' }}
+              </span>
+              <span class="pill-emoji">❌</span>
+            </span>
+
+            <p class="q-explanation">
+              {{ q.explanation }}
+            </p>
           </div>
         }
       </div>
     }
   </section>
 
+  <!-- Painel final -->
   <section class="panel">
     @if (showFeedback() === 'erro') {
       <div class="alert alert-erro">
-        ❌ Você acertou {{ correctCount() }}/{{ questions().length }}. Revise os itens com ❌.
+        ❌ Você acertou {{ correctCount() }}/{{ questions().length }}.
+        Revise os itens marcados como incorretos.
       </div>
     }
+
     @if (showFeedback() === 'ok') {
       <div class="alert alert-ok">
         ✅ Excelente! Atividade concluída. Voltando à trilha…
@@ -58,9 +81,22 @@
     }
 
     <div class="actions">
-      <button class="btn btn-concluir" [disabled]="!allAnswered()" (click)="concluir()">Concluir</button>
-      <a routerLink="/trilha" class="btn btn-ghost">Voltar</a>
+      <button
+        type="button"
+        class="btn btn-concluir"
+        [disabled]="!allAnswered()"
+        (click)="concluir()">
+        Concluir
+      </button>
+
+      <!-- Voltar para a tela Trilha de Aprendizagem -->
+      <button
+        type="button"
+        class="btn btn-ghost"
+        [disabled]="submitting()"
+        (click)="voltar()">
+        Voltar
+      </button>
     </div>
   </section>
 </div>
-

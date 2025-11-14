@@ -1,0 +1,105 @@
+<div class="intro-wrapper">
+
+  <!-- Cabeçalho -->
+  <header class="intro-header">
+    <div class="pill">Lição 5 — Passos simples</div>
+    <h1 class="intro-title">
+      Passos simples para começar hoje <span class="emoji">👣</span>
+    </h1>
+    <p class="intro-sub">
+      Escolha pelo menos <strong>3 ações</strong> que você está disposto(a) a praticar na vida real.
+    </p>
+  </header>
+
+  <!-- Cards de explicação -->
+  <section class="cards">
+    <div class="card-step">
+      <div class="card-icon">🧠</div>
+      <div class="card-title">Consciência primeiro</div>
+      <p class="card-text">
+        Antes de mudar tudo, é importante enxergar como o dinheiro entra e sai do seu dia a dia.
+      </p>
+    </div>
+
+    <div class="card-step">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Um passo de cada vez</div>
+      <p class="card-text">
+        Não precisa virar “mestre das finanças” hoje. Pequenos passos consistentes já fazem diferença.
+      </p>
+    </div>
+
+    <div class="card-step">
+      <div class="card-icon">⏱️</div>
+      <div class="card-title">Aplicar, não só entender</div>
+      <p class="card-text">
+        A ideia aqui é escolher atitudes que você realmente consiga colocar em prática ainda essa semana.
+      </p>
+    </div>
+  </section>
+
+  <!-- Lista de passos de ação -->
+  <section class="actions-section">
+    <h2 class="actions-title">Escolha seus passos de ação</h2>
+    <p class="actions-sub">
+      Selecione pelo menos <strong>3 passos</strong> que fazem sentido para você agora.
+    </p>
+
+    <div class="steps-grid">
+      @for (s of steps(); track s.id) {
+        <button type="button"
+                class="step-card"
+                [class.step-card--selected]="s.selected"
+                (click)="toggleStep(s.id)">
+
+          <div class="step-header">
+            <span class="step-tag">{{ s.tag }}</span>
+            <span class="step-check">
+              {{ s.selected ? '✅' : '➕' }}
+            </span>
+          </div>
+
+          <h3 class="step-title">{{ s.title }}</h3>
+          <p class="step-desc">{{ s.description }}</p>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Painel final -->
+  <section class="panel">
+    <div class="panel-summary">
+      <span>Passos selecionados:</span>
+      <strong>{{ selectedCount() }}/5</strong>
+    </div>
+
+    @if (feedback() === 'erro') {
+      <div class="alert alert-erro">
+        ❌ Escolha pelo menos 3 passos para concluir a lição.
+      </div>
+    }
+
+    @if (feedback() === 'ok') {
+      <div class="alert alert-ok">
+        ✅ Perfeito! Lição concluída. Seus passos já contam como progresso na trilha. 💚
+      </div>
+    }
+
+    <div class="actions">
+      <button type="button"
+              class="btn btn-concluir"
+              [disabled]="!canConclude() || submitting()"
+              (click)="concluir()">
+        Concluir plano
+      </button>
+
+      <button type="button"
+              class="btn btn-ghost"
+              [disabled]="submitting()"
+              (click)="voltar()">
+        Voltar
+      </button>
+    </div>
+  </section>
+</div>
+

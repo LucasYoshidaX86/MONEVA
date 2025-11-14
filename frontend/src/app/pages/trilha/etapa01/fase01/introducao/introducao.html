@@ -35,6 +35,7 @@
                   (click)="mark('V', i)">
             Verdadeiro
           </button>
+
           <button type="button"
                   class="btn opt"
                   [class.active]="q.user === 'F'"
@@ -42,23 +43,66 @@
             Falso
           </button>
         </div>
+
+        <!-- FEEDBACK POR PERGUNTA -->
+        <!-- Versão 1: só mostra quando está errada -->
+        @if (shouldShowStatus(q)) {
+          <div class="inline-feedback">
+            <span class="pill-status pill-status-error">
+              <span class="pill-truth">
+                {{ q.correct === 'V' ? 'É VERDADEIRO' : 'É FALSO' }}
+              </span>
+              <span class="pill-emoji">❌</span>
+            </span>
+
+            <p class="q-explanation">
+              {{ q.explanation }}
+            </p>
+          </div>
+        }
+
+        <!--
+        Se você quiser mostrar ✅ também quando estiver certa,
+        pode trocar pelo bloco abaixo:
+
+        @if (trilhaSubmit && q.user !== null) {
+          <div class="inline-feedback">
+            <span class="pill-status"
+                  [class.pill-status-ok]="isQuestionCorrect(q)"
+                  [class.pill-status-error]="!isQuestionCorrect(q)">
+              <span class="pill-truth">
+                {{ q.correct === 'V' ? 'É VERDADEIRO' : 'É FALSO' }}
+              </span>
+              <span class="pill-emoji">
+                {{ isQuestionCorrect(q) ? '✅' : '❌' }}
+              </span>
+            </span>
+
+            @if (!isQuestionCorrect(q)) {
+              <p class="q-explanation">
+                {{ q.explanation }}
+              </p>
+            }
+          </div>
+        }
+        -->
       </div>
     }
 
-    <!-- Feedback -->
+    <!-- Feedback geral -->
     @if (showFeedback() === 'erro') {
       <div class="alert alert-erro">
-        ❌ Quase lá! Responda tudo e confira as alternativas.
+        ❌ Quase lá! Responda todas as perguntas e confira as alternativas marcadas.
       </div>
     }
 
     @if (showFeedback() === 'ok') {
       <div class="alert alert-ok">
-        ✅ Boa! Lições concluídas. Marcando progresso…
+        ✅ Boa! Lição concluída. Seu progresso foi atualizado na trilha. 💚
       </div>
     }
 
-    <!-- Ação principal -->
+    <!-- Ações -->
     <div class="actions">
       <button type="button"
               class="btn btn-concluir"
@@ -67,10 +111,15 @@
         Concluir
       </button>
 
-      <a routerLink="/trilha" class="btn btn-ghost">Voltar</a>
+      <!-- Voltar para a tela Trilha de Aprendizagem -->
+      <button
+        type="button"
+        class="btn btn-ghost"
+        [disabled]="submitting()"
+        (click)="voltar()">
+        Voltar
+      </button>
+
     </div>
   </section>
 </div>
-
-
-

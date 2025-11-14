@@ -1,11 +1,8 @@
-<div class="container-fluid vh-100 bg-dark text-white p-0 d-flex">
-  <!-- Layout principal: ocupa a tela toda, usa tema escuro e exibe a sidebar e o conteúdo lado a lado -->
-  
+<div class="container-fluid vh-100 text-white p-0 d-flex trilha-wrapper">
+  <!-- SIDEBAR -->
   <aside class="sidebar d-flex flex-column p-3">
-    <!-- Barra lateral com logo e menu -->
     <h2 class="fw-bold text-white mb-4">MONEVA</h2>
     <ul class="nav flex-column">
-      <!-- Cada link usa routerLink para navegar entre rotas do Angular sem recarregar a página -->
       <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/home">🏠 Home</a></li>
       <li class="nav-item mb-2"><a class="nav-link text-white active" routerLink="/trilha">💰 Trilha de Aprendizado</a></li>
       <li class="nav-item mb-2"><a class="nav-link text-white" routerLink="/demonstrativos">📊 Demonstrativos</a></li>
@@ -13,30 +10,37 @@
     </ul>
   </aside>
 
-  <main class="flex-grow-1 p-4 bg-black overflow-auto">
-    <!-- Área principal onde aparece o conteúdo da página selecionada -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h3 class="fw-semibold text-success">Trilha de Aprendizado</h3>
-      <!-- Botão para zerar o progresso das lições -->
-      <button class="btn btn-outline-light btn-sm" (click)="resetProgress()">Resetar progresso</button>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-grow-1 trilha-main overflow-auto">
+    <div class="trilha-topbar d-flex justify-content-between align-items-center">
+      <div>
+        <div class="topbar-subtitle">TRILHA</div>
+        <h3 class="fw-semibold text-success m-0">Trilha de Aprendizado</h3>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="xp-badge">
+          <span class="xp-label">XP total</span>
+          <span class="xp-value">{{ totalXp() }}</span>
+        </div>
+
+        <button class="btn btn-outline-light btn-sm" (click)="resetProgress()">
+          Resetar progresso
+        </button>
+      </div>
     </div>
 
     <div class="trilha container py-2">
-      <!-- Loop que percorre todas as seções da trilha -->
       @for (sec of sections; track sec.id) {
         <section class="trilha__section mb-5">
           <div class="d-flex align-items-center justify-content-between mb-3">
-            <!-- Título da seção e contador de lições concluídas -->
             <h5 class="trilha__title m-0">{{ sec.title }}</h5>
             <small class="activity-count">{{ doneCount(sec) }}/{{ sec.nodes.length }} concluídos</small>
           </div>
 
-          <!-- Torre vertical que mostra o progresso geral da seção -->
-          <div class="tower" [style.--progress]="sectionProgress(sec) + '%'">
-            <!-- Loop para cada “nó” (aula ou joguinho) dentro da seção -->
+          <div class="tower">
             @for (node of sec.nodes; track node.id; let i = $index) {
               <div class="unit-wrap" [class.shift-left]="i % 2 === 0" [class.shift-right]="i % 2 === 1">
-                <!-- Cada unidade tem seu próprio status (bloqueada, liberada, concluída) -->
                 <button type="button"
                         class="unit"
                         [class.unit--lesson]="node.kind === 'lesson'"
@@ -46,22 +50,16 @@
                         [class.is-completed]="getStatus(node.id) === 'completed'"
                         [disabled]="getStatus(node.id) === 'locked'"
                         [routerLink]="routeFor(node.id)">
-                  
-                  <!-- “Anel” que mostra o progresso em porcentagem -->
+
                   <span class="ring" [style.--p]="progressOf(node.id) + '%'"></span>
-                  
-                  <!-- Emoji da lição ou jogo -->
                   <span class="icon">{{ node.emoji }}</span>
 
-                  <!-- Ícones de status (cadeado ou check) -->
-                  @if (getStatus(node.id) === 'locked')   { <span class="state">🔒</span> }
-                  @if (getStatus(node.id) === 'completed'){ <span class="state">✅</span> }
+                  @if (getStatus(node.id) === 'locked')    { <span class="state">🔒</span> }
+                  @if (getStatus(node.id) === 'completed') { <span class="state">✅</span> }
                 </button>
 
-                <!-- Título da unidade -->
                 <div class="unit-label text-center" [innerHTML]="node.title"></div>
 
-                <!-- Selo que aparece na unidade atual que o usuário deve começar -->
                 @if (isCurrent(sec, i)) {
                   <div class="start-badge">COMEÇAR</div>
                 }
@@ -73,7 +71,3 @@
     </div>
   </main>
 </div>
-
-
-
-

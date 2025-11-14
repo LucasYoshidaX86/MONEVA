@@ -242,4 +242,53 @@ html, body {
   }
 }
 
+/* ===== Feedback em cada questão (NOVO) ===== */
+.q-inline-feedback {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
 
+.pill-status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.pill-status.ok {
+  background: rgba(0, 255, 154, .08);
+  border: 1px solid #00ff9a;
+  color: #b9ffe7;
+}
+
+.pill-status.err {
+  background: rgba(255, 80, 80, .08);
+  border: 1px solid #ff6b6b;
+  color: #ffdcdc;
+}
+
+.pill-truth {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #eafff8;
+}
+
+.pill-emoji {
+  font-size: 18px;
+}
+
+.q-explanation {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #eafff8;
+  opacity: .9;
+}

@@ -1,8 +1,17 @@
-import { Component, computed, signal } from '@angular/core';
+// src/app/pages/trilha/etapa01/fase01/introducao/introducao.ts
+import { Component, signal } from '@angular/core';
+import { TrilhaProgressService } from '../../../../../core/trilha.service';
 import { Router } from '@angular/router';
-import { TrilhaProgressService } from '../../../../../trilha/trilha-progress';
 
 type Choice = 'V' | 'F' | null;
+
+interface IntroQuestion {
+  id: number;
+  text: string;
+  correct: Choice;
+  user: Choice;
+  explanation: string;
+}
 
 @Component({
   selector: 'app-introducao',
@@ -16,50 +25,114 @@ export class Introducao {
   steps = [
     { icon:'🧠', title:'Consciência', text:'Saber para onde vai o dinheiro evita surpresas no fim do mês.' },
     { icon:'🧾', title:'Previsão',     text:'Planejar entradas e saídas ajuda a tomar decisões melhores.' },
-    { icon:'🎯', title:'Objetivo',     text:'Com metas claras, fica mais fácil manter o foco e motivação.' },
+    { icon:'🎯', title:'Objetivo',     text:'Com metas claras, fica mais fácil manter o foco e a motivação.' },
   ];
 
-  // mini-quiz com SIGNAL (agora o computed reage às mudanças)
-  questions = signal([
-    { id: 1, text: 'Anotar gastos pequenos pode revelar desperdícios.', answer: 'V' as Exclude<Choice, null>, user: null as Choice },
-    { id: 2, text: 'Planejar o mês ajuda a evitar dívidas.',            answer: 'V' as Exclude<Choice, null>, user: null as Choice },
-    { id: 3, text: 'Cuidar do dinheiro é só pra quem ganha muito.',     answer: 'F' as Exclude<Choice, null>, user: null as Choice },
+  // perguntas do quiz
+  private _questions = signal<IntroQuestion[]>([
+    {
+      id: 1,
+      text: 'Educação financeira é importante apenas para quem ganha muito dinheiro.',
+      correct: 'F',
+      user: null,
+      explanation: 'Mesmo com renda baixa, saber organizar e planejar o dinheiro faz MUITA diferença no dia a dia.'
+    },
+    {
+      id: 2,
+      text: 'Anotar seus gastos ajuda a descobrir por onde o dinheiro está “escapando”.',
+      correct: 'V',
+      user: null,
+      explanation: 'Quando você registra tudo, fica fácil enxergar gastos desnecessários e ajustar o orçamento.'
+    },
+    {
+      id: 3,
+      text: 'Ter um objetivo claro (como quitar dívidas ou fazer uma viagem) ajuda a manter o foco nas finanças.',
+      correct: 'V',
+      user: null,
+      explanation: 'Objetivos dão direção: você sabe por que está economizando e fica mais motivado a continuar.'
+    }
   ]);
 
-  // estados de UI
-  showFeedback = signal<null | 'ok' | 'erro'>(null);
-  allAnswered = computed(() => this.questions().every(q => q.user !== null));
-  allCorrect  = computed(() => this.questions().every(q => q.user === q.answer));
+  questions = this._questions.asReadonly();
 
-  constructor(private router: Router, private progress: TrilhaProgressService) {}
+  // marca se já clicou em "Concluir" (para controlar feedback)
+  trilhaSubmit = false;
+
+  constructor(
+    private trilha: TrilhaProgressService,
+    private router: Router
+    ) {}
+
+  // ========= LÓGICA DO QUIZ =========
 
   mark(choice: Choice, index: number) {
-    // atualiza imutavelmente para disparar o signal
-    this.questions.update(arr => {
-      const copy = [...arr];
-      copy[index] = { ...copy[index], user: choice };
-      return copy;
+    this._questions.update(list => {
+      const clone = [...list];
+      clone[index] = { ...clone[index], user: choice };
+      return clone;
     });
-    this.showFeedback.set(null);
   }
 
-  concluir() {
-  if (!this.allAnswered()) { 
-    this.showFeedback.set('erro'); 
-    return; 
+  allAnswered(): boolean {
+    return this._questions().every(q => q.user !== null);
   }
 
-  if (!this.allCorrect())  { 
-    this.showFeedback.set('erro'); 
-    return; 
+  private allCorrect(): boolean {
+    return this._questions().every(q => q.user === q.correct);
   }
 
-  // Marca progresso e exibe feedback visual
-  this.progress.completeById('sec1-n1');
-  this.showFeedback.set('ok');
+  // feedback geral (alerta verde/vermelho)
+  showFeedback(): 'erro' | 'ok' | null {
+    if (!this.trilhaSubmit) return null;
 
-  // Atraso maior (1.8 segundos) antes de voltar pra trilha
-  setTimeout(() => this.router.navigateByUrl('/trilha'), 1800);
+    if (!this.allAnswered()) {
+      return 'erro'; // “responda tudo”
+    }
+
+    return this.allCorrect() ? 'ok' : 'erro';
+  }
+
+  // essa pergunta está correta?
+  isQuestionCorrect(q: IntroQuestion): boolean {
+    return q.user !== null && q.user === q.correct;
+  }
+
+  // devo mostrar o status/explicação dessa pergunta?
+  // regra: só depois de clicar em CONCLUIR, e se a pergunta estiver errada
+  shouldShowStatus(q: IntroQuestion): boolean {
+    if (!this.trilhaSubmit) return false;   // ainda não clicou em Concluir
+    if (q.user === null) return false;      // nem respondeu
+    return q.user !== q.correct;           // só se estiver errada
+  }
+
+  // ========= AÇÃO "CONCLUIR" =========
+  async concluir() {
+  this.trilhaSubmit = true; // marca que tentou enviar
+
+  if (!this.allAnswered()) {
+    return; // ainda falta marcar alternativas
+  }
+
+  const ok = this.allCorrect();
+
+  if (!ok) {
+    return; // tem erro → só mostra feedback das perguntas
+  }
+
+  // tudo correto → salva progresso
+  await this.trilha.completeById('sec1-n1');
+
+  // agora redireciona depois de um tempinho
+  setTimeout(() => {
+    this.router.navigate(['/trilha']);
+  }, 1800); // 1.8s para o aluno ver o feedback verde
 }
-}
 
+  // Botão voltar para a página Trilha
+  submitting = signal(false);
+
+  voltar() {
+    if (this.submitting()) return;
+    this.router.navigate(['/trilha']);
+  }
+}

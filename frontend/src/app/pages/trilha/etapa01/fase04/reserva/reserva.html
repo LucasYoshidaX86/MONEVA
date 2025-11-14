@@ -1,8 +1,100 @@
-<div class="etapa-container">
-  <h2>👋 Reserva</h2>
-  <p>Bem-vindo(a) à sua trilha de aprendizado financeira! Aqui você vai aprender os primeiros passos para organizar suas finanças de forma simples e prática.</p>
+<div class="intro-wrapper">
 
-  <div class="actions">
-    <a routerLink="/trilha" class="btn btn-outline-light">← Voltar para Trilha</a>
-  </div>
+  <!-- Cabeçalho -->
+  <header class="intro-header">
+    <div class="pill">Lição 4 — Desafio</div>
+    <h1 class="intro-title">
+      Desafio dos Erros Financeiros <span class="emoji">⚖️</span>
+    </h1>
+    <p class="intro-sub">Leia as histórias e encontre o erro financeiro principal. 🚨</p>
+  </header>
+
+  <!-- Passos curtos (cards) -->
+  <section class="cards">
+    @for (s of steps; track s.title) {
+      <div class="card-step">
+        <div class="card-icon">{{ s.icon }}</div>
+        <div class="card-title">{{ s.title }}</div>
+        <p class="card-text">{{ s.text }}</p>
+      </div>
+    }
+  </section>
+
+  <!-- Desafio -->
+  <section class="quiz">
+    <h2 class="quiz-title">Ache o erro financeiro!</h2>
+
+    @for (q of questions(); track q.id; let i = $index) {
+      <div class="quiz-item">
+        <div class="story">
+          <div class="story-label">História {{ i + 1 }}</div>
+          <p class="story-text">
+            {{ q.story }}
+          </p>
+        </div>
+
+        <p class="q-question">{{ q.question }}</p>
+
+        <div class="q-options">
+          @for (opt of q.options; track opt.id) {
+            <button type="button"
+                    class="btn opt"
+                    [class.active]="q.user === opt.id"
+                    (click)="selectOption(i, opt.id)">
+              <span class="opt-letter">{{ opt.id }}.</span>
+              <span class="opt-text">{{ opt.text }}</span>
+            </button>
+          }
+        </div>
+
+        <!-- Feedback por pergunta: só se errou e depois de clicar em Concluir -->
+        @if (shouldShowStatus(q)) {
+          <div class="inline-feedback">
+            <span class="pill-status pill-status-error">
+              <span class="pill-truth">
+                Resposta correta:
+                {{ correctOption(q)?.id }} — {{ correctOption(q)?.text }}
+              </span>
+              <span class="pill-emoji">❌</span>
+            </span>
+
+            <p class="q-explanation">
+              {{ correctOption(q)?.explanation }}
+            </p>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Feedback geral -->
+    @if (showFeedback() === 'erro') {
+      <div class="alert alert-erro">
+        ❌ Você acertou {{ correctCount() }}/{{ questions().length }} histórias.
+        Revise os erros marcados e tente novamente.
+      </div>
+    }
+
+    @if (showFeedback() === 'ok') {
+      <div class="alert alert-ok">
+        ✅ Mandou bem! Você identificou todos os erros financeiros. Lição concluída. 💚
+      </div>
+    }
+
+    <!-- Ações -->
+    <div class="actions">
+      <button type="button"
+              class="btn btn-concluir"
+              [disabled]="!allAnswered()"
+              (click)="concluir()">
+        Concluir
+      </button>
+
+      <button type="button"
+              class="btn btn-ghost"
+              (click)="voltar()">
+        Voltar
+      </button>
+    </div>
+  </section>
 </div>
+

@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule, DecimalPipe, DatePipe, TitleCasePipe, DOCUMENT } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms'
 import { Chart } from 'chart.js/auto';
 import { RouterLink } from '@angular/router';
 import { TransactionsService, TransacaoDoc, Tipo, Meio } from '../../core/transactions.service';
@@ -33,7 +33,7 @@ type MeioValido = typeof MEIOS_VALIDOS[number];
 @Component({
   selector: 'app-demonstrativos',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DecimalPipe, DatePipe, TitleCasePipe],
+  imports: [CommonModule, RouterLink, DecimalPipe, DatePipe, TitleCasePipe, FormsModule],
   templateUrl: './demonstrativos.html',
   styleUrl: './demonstrativos.scss'
 })

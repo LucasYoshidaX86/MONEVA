@@ -42,23 +42,39 @@
             Falso
           </button>
         </div>
+
+        <!-- FEEDBACK POR PERGUNTA (só depois de clicar em Concluir e se estiver ERRADA) -->
+        @if (shouldShowStatus(q)) {
+          <div class="inline-feedback">
+            <span class="pill-status pill-status-error">
+              <span class="pill-truth">
+                {{ q.correct === 'V' ? 'É VERDADEIRO' : 'É FALSO' }}
+              </span>
+              <span class="pill-emoji">❌</span>
+            </span>
+
+            <p class="q-explanation">
+              {{ q.explanation }}
+            </p>
+          </div>
+        }
       </div>
     }
 
-    <!-- Feedback -->
+    <!-- Feedback geral -->
     @if (showFeedback() === 'erro') {
       <div class="alert alert-erro">
-        ❌ Quase lá! Responda tudo e confira as alternativas.
+        ❌ Quase lá! Responda todas as perguntas e confira as alternativas marcadas.
       </div>
     }
 
     @if (showFeedback() === 'ok') {
       <div class="alert alert-ok">
-        ✅ Boa! Lição concluída. Marcando progresso…
+        ✅ Boa! Lição concluída. Seu progresso foi atualizado na trilha. 💚
       </div>
     }
 
-    <!-- Ação principal -->
+    <!-- Ações -->
     <div class="actions">
       <button type="button"
               class="btn btn-concluir"
@@ -67,9 +83,11 @@
         Concluir
       </button>
 
-      <a routerLink="/trilha" class="btn btn-ghost">Voltar</a>
+      <button type="button"
+              class="btn btn-ghost"
+              (click)="voltar()">
+        Voltar
+      </button>
     </div>
   </section>
 </div>
-
-
