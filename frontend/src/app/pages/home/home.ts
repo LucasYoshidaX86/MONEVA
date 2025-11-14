@@ -4,11 +4,12 @@ import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { UserProfileService } from '../../core/user-profile.service';
 import { Subscription } from 'rxjs';
 import { ProfilePanelComponent } from '../../shared/profile-panel/profile-panel';
+import { SafeUrlPipe } from '../../shared/pipes/safe-url.pipe'; // ⬅️ novo import
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProfilePanelComponent],
+  imports: [RouterLink, ProfilePanelComponent, SafeUrlPipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -25,6 +26,9 @@ export class Home implements OnDestroy {
 
   /** Nome que será exibido no “Fala Aí, …!” */
   firstName = signal<string>('Usuário');
+
+  /** URL do relatório Power BI embedado na Home */
+  powerBiUrl = 'https://app.powerbi.com/view?r=SEU_LINK_DE_EMBED_AQUI'; 
 
   constructor() {
     // 1) Observa o documento do usuário no Firestore

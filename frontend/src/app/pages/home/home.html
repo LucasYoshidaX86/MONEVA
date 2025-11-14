@@ -77,9 +77,21 @@
     </p>
 
     <!-- Card do DashBoard -->
+        <!-- Card do DashBoard -->
     <div class="card text-white p-4" style="background-color:#181c1f">
-      <h5 class="card-title mb-2">Dashboard Financeiro</h5>
-      <canvas id="financeChart" style="height: 350px;"></canvas>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="card-title mb-0">Dashboard Financeiro</h5>
+        <span class="pbi-badge">Power BI</span>
+      </div>
+
+      <div class="pbi-wrap">
+        <iframe
+          [src]="powerBiUrl | safeUrl"
+          frameborder="0"
+          allowFullScreen="true"
+          title="Dashboard Financeiro Moneva">
+        </iframe>
+      </div>
     </div>
   </main>
 </div>
