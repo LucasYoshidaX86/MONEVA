@@ -1,7 +1,7 @@
 // src/app/core/trilha.service.ts
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
-import { Firestore, doc, getDoc, setDoc, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 
 export type NodeStatus = 'locked' | 'unlocked' | 'completed';
 export type NodeKind   = 'lesson' | 'game';
@@ -85,6 +85,12 @@ interface ProgressState {
   totalXp: number;
 }
 
+// Documento MINIMAL salvo no Firestore
+interface RemoteProgressDoc {
+  currentNodeId: string | null;
+  totalXp: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TrilhaProgressService {
 
@@ -93,44 +99,35 @@ export class TrilhaProgressService {
 
   private user: User | null = null;
 
-  // controle de gravação em blocos
-  private cloudSaveTimer: any = null;
-  private lastCloudSnapshot = '';
-  private cloudDisabled = true; //FIRESTONE DESLIGADO
-
   get sections(): TrilhaSection[] { return SECTIONS; }
 
   constructor(
     private auth: Auth,
     private firestore: Firestore
   ) {
-    // usuário atual, se já estiver logado
-    this.user = this.auth.currentUser ?? null;
+    // estado inicial local
+    this._state.set(this.emptyState());
+    this.bootstrapUnlocks();
 
-    // carrega do Firestore quando tiver usuário
+    // tenta pegar o usuário já logado (por exemplo, após F5)
+    this.user = this.auth.currentUser ?? null;
     if (this.user) {
+      console.log('[Trilha] usuário inicial', this.user.uid);
       this.loadFromCloud();
-    } else {
-      // ainda assim garante gates
-      this.bootstrapUnlocks();
     }
 
-    // troca de usuário → recarrega progresso do Firestore
+    // mantém sincronizado com o Firebase Auth
     onAuthStateChanged(this.auth, (u) => {
       this.user = u ?? null;
+      console.log('[Trilha] onAuthStateChanged', this.user?.uid);
+
       if (this.user) {
         this.loadFromCloud();
       } else {
-        // sem usuário: estado vazio e gates básicos
         this._state.set(this.emptyState());
         this.bootstrapUnlocks();
       }
     });
-  }
-
-  // ==== helper pra disparar save só quando a gente quiser ====
-  private touchCloudSave() {
-    this.scheduleCloudSave(this._state());
   }
 
   // ======= Helpers de estado =======
@@ -148,19 +145,61 @@ export class TrilhaProgressService {
     return doc(this.firestore, 'users', this.user.uid, 'trilha', 'status');
   }
 
-  private serialize(state: ProgressState) {
+  /**
+   * Versão MINIMAL que vai pro Firestore:
+   * - currentNodeId: último nó concluído (ou null se nenhum)
+   * - totalXp: XP total
+   */
+  private serialize(state: ProgressState): RemoteProgressDoc {
+    const last = this.getLastCompletedNodeId(state.statusMap);
     return {
-      statusMap: state.statusMap,
-      bestScoreByNode: state.bestScoreByNode,
-      xpByNode: state.xpByNode,
-      totalXp: state.totalXp,
-      updatedAt: serverTimestamp()
+      currentNodeId: last ?? null,
+      totalXp: state.totalXp
     };
+  }
+
+  /** Encontra o último nó marcado como "completed" na ordem da trilha */
+  private getLastCompletedNodeId(map: StatusMap): string | null {
+    let last: string | null = null;
+    for (const sec of SECTIONS) {
+      for (const node of sec.nodes) {
+        if (map[node.id] === 'completed') {
+          last = node.id;
+        }
+      }
+    }
+    return last;
+  }
+
+  /** Reconstrói ProgressState a partir do doc MINIMAL do Firestore */
+  private rebuildStateFromMinimal(currentNodeId: string | null, totalXp: number): ProgressState {
+    const st = this.emptyState();
+    st.totalXp = totalXp;
+
+    const map: StatusMap = {};
+
+    if (currentNodeId) {
+      let stop = false;
+      for (const sec of SECTIONS) {
+        for (const node of sec.nodes) {
+          map[node.id] = 'completed';
+          if (node.id === currentNodeId) {
+            stop = true;
+            break;
+          }
+        }
+        if (stop) break;
+      }
+    }
+
+    st.statusMap = this.applyGates(map);
+    return st;
   }
 
   private async loadFromCloud() {
     const ref = this.userDocRef();
     if (!ref) {
+      console.warn('[Trilha] loadFromCloud: sem userRef');
       this._state.set(this.emptyState());
       this.bootstrapUnlocks();
       return;
@@ -168,83 +207,56 @@ export class TrilhaProgressService {
 
     try {
       const snap = await getDoc(ref);
-            if (!snap.exists()) {
-        // usuário novo: só estado em memória por enquanto (sem salvar na nuvem)
+      if (!snap.exists()) {
+        console.log('[Trilha] Nenhum progresso remoto, começando do zero');
         const st = this.emptyState();
         this._state.set(st);
         this.bootstrapUnlocks();
-        // ⚠️ NADA de setDoc aqui enquanto cloudDisabled = true
-        this.lastCloudSnapshot = JSON.stringify(this.serialize(this._state()));
         return;
       }
 
-
       const data = snap.data() as any;
-      const st: ProgressState = {
-        statusMap: data.statusMap ?? data.map ?? {},
-        bestScoreByNode: data.bestScoreByNode ?? {},
-        xpByNode: data.xpByNode ?? {},
-        totalXp: typeof data.totalXp === 'number' ? data.totalXp : 0
-      };
+      let st: ProgressState;
+
+      // Compatível com formato antigo (statusMap, xpByNode, etc.)
+      if (data.statusMap || data.map) {
+        console.log('[Trilha] carregando formato antigo de progresso');
+        st = {
+          statusMap: data.statusMap ?? data.map ?? {},
+          bestScoreByNode: data.bestScoreByNode ?? {},
+          xpByNode: data.xpByNode ?? {},
+          totalXp: typeof data.totalXp === 'number' ? data.totalXp : 0
+        };
+      } else {
+        // Formato novo minimalista
+        console.log('[Trilha] carregando formato minimalista de progresso');
+        const totalXp = typeof data.totalXp === 'number' ? data.totalXp : 0;
+        const currentNodeId = (data.currentNodeId ?? null) as string | null;
+        st = this.rebuildStateFromMinimal(currentNodeId, totalXp);
+      }
 
       this._state.set(st);
       this.bootstrapUnlocks();
-
-      const payload = this.serialize(this._state());
-      this.lastCloudSnapshot = JSON.stringify(payload);
     } catch (e) {
       console.error('[Trilha] Erro ao carregar progresso do Firestore', e);
-      // em caso de erro, mantém estado local vazio com gates
       this._state.set(this.emptyState());
       this.bootstrapUnlocks();
     }
   }
 
-  // gravação em blocos (debounce)
-  private scheduleCloudSave(state: ProgressState, delayMs: number = 3000) {
-    if (!this.user) return;
-    if (this.cloudDisabled) return;
-
-    // já tem um timer? deixa ele rodar
-    if (this.cloudSaveTimer) return;
-
-    const payload = this.serialize(state);
-    const snapshot = JSON.stringify(payload);
-
-    // se nada mudou desde o último save, não agenda nada
-    if (snapshot === this.lastCloudSnapshot) return;
-
-    this.cloudSaveTimer = setTimeout(async () => {
-      this.cloudSaveTimer = null;
-
-      const currentState = this._state();
-      const currentPayload = this.serialize(currentState);
-      const currentSnapshot = JSON.stringify(currentPayload);
-
-      if (currentSnapshot === this.lastCloudSnapshot) {
-        return;
-      }
-
-      const ref = this.userDocRef();
-      if (!ref) return;
-
-      try {
-        await setDoc(ref, currentPayload, { merge: true });
-        this.lastCloudSnapshot = currentSnapshot;
-      } catch (e: any) {
-        console.error('[Trilha] Erro ao salvar progresso no Firestore', e);
-
-        const code = e?.code ?? '';
-        if (
-          code === 'resource-exhausted' ||
-          code === 'deadline-exceeded' ||
-          code === 'permission-denied'
-        ) {
-          console.warn('[Trilha] Desativando sync com Firestore nesta sessão por erro:', code);
-          this.cloudDisabled = true;
-        }
-      }
-    }, delayMs);
+  private async saveToCloud() {
+    const ref = this.userDocRef();
+    if (!ref) {
+      console.warn('[Trilha] saveToCloud: usuário não definido, não salvando');
+      return;
+    }
+    const payload = this.serialize(this._state());
+    try {
+      console.log('[Trilha] salvando progresso na nuvem', payload);
+      await setDoc(ref, payload, { merge: true });
+    } catch (e) {
+      console.error('[Trilha] erro ao salvar progresso no Firestore', e);
+    }
   }
 
   // ======= API usada pelo componente da trilha =======
@@ -302,11 +314,6 @@ export class TrilhaProgressService {
   }
 
   // ===== SUBMISSÃO DE SCORE (quizzes) =====
-  /**
-   * Chamar isso ao finalizar um quiz.
-   * - correct: número de acertos
-   * - total: número total de questões
-   */
   submitScore(nodeId: string, correct: number, total: number) {
     const st = { ...this._state() };
 
@@ -318,7 +325,6 @@ export class TrilhaProgressService {
     const passedBefore = prevBest >= PASS_THRESHOLD;
     const passedNow = score >= PASS_THRESHOLD;
 
-    // atualiza melhor % para esse nó
     if (score > prevBest) {
       st.bestScoreByNode[nodeId] = score;
     }
@@ -328,19 +334,16 @@ export class TrilhaProgressService {
     let completed = false;
 
     if (!passedBefore && passedNow) {
-      // PRIMEIRA vez que esse nó atinge a % mínima
       const baseXp = XP_PER_KIND[node.kind] ?? 0;
       const xp = Math.round((score / 100) * baseXp);
       st.xpByNode[nodeId] = xp;
       st.totalXp += xp;
       xpGain = xp;
 
-      // marca como concluído e libera próximo
       st.statusMap[nodeId] = 'completed';
       completed = true;
       unlockedNext = this.unlockNextFrom(nodeId, st.statusMap);
     } else if (!passedNow) {
-      // falhou: garante que pelo menos esteja desbloqueado (não mexemos em XP)
       if (!st.statusMap[nodeId] || st.statusMap[nodeId] === 'locked') {
         st.statusMap[nodeId] = 'unlocked';
       }
@@ -349,8 +352,8 @@ export class TrilhaProgressService {
     st.statusMap = this.applyGates(st.statusMap);
     this._state.set(st);
 
-    // salva em bloco no Firestore só aqui (ao finalizar quiz)
-    this.touchCloudSave();
+    // salva no Firestore em background
+    this.saveToCloud();
 
     return { score, xpGain, unlockedNext, completed, passedNow };
   }
@@ -362,7 +365,6 @@ export class TrilhaProgressService {
     const node = this.findNode(id);
     if (!node) return;
 
-    const prevStatus = st.statusMap[id] ?? 'locked';
     const prevBest = st.bestScoreByNode[id] ?? 0;
     const alreadyPassed = prevBest >= PASS_THRESHOLD;
 
@@ -376,17 +378,16 @@ export class TrilhaProgressService {
       st.totalXp += xp;
     }
 
-    // libera o próximo
     this.unlockNextFrom(id, st.statusMap);
     st.statusMap = this.applyGates(st.statusMap);
 
     this._state.set(st);
 
-    // salva em bloco ao concluir uma atividade simples
-    this.touchCloudSave();
+    // salva no Firestore em background
+    this.saveToCloud();
   }
 
-  // ===== Progresso por seção (igual sua versão antiga) =====
+  // ===== Progresso por seção =====
   doneCount(sec: TrilhaSection, map = this._state().statusMap): number {
     let c = 0;
     for (const n of sec.nodes) if ((map[n.id] ?? 'locked') === 'completed') c++;
@@ -402,13 +403,25 @@ export class TrilhaProgressService {
     return this.doneCount(sec, map) === sec.nodes.length;
   }
 
-  // ===== RESET =====
-  reset() {
+  // ===== RESET (zera local + nuvem) =====
+  async reset() {
     const empty = this.emptyState();
     this._state.set(empty);
     this.bootstrapUnlocks();
-    // força um save mais rápido após reset
-    this.scheduleCloudSave(this._state(), 500);
+
+    const ref = this.userDocRef();
+    if (ref) {
+      const payload: RemoteProgressDoc = {
+        currentNodeId: null,
+        totalXp: 0
+      };
+      try {
+        console.log('[Trilha] reset: zerando doc remoto');
+        await setDoc(ref, payload);
+      } catch (e) {
+        console.error('[Trilha] erro ao resetar progresso remoto', e);
+      }
+    }
   }
 
   // ===== GATES / HELPERS =====
@@ -421,6 +434,7 @@ export class TrilhaProgressService {
       for (let i = 0; i < sec.nodes.length; i++) {
         const id = sec.nodes[i].id;
         if (sIdx === 0 && i === 0) {
+          // primeira atividade sempre desbloqueada
           if (!map[id] || map[id] === 'locked') map[id] = 'unlocked';
         } else {
           if (map[id] !== 'completed' && map[id] !== 'unlocked') map[id] = 'locked';

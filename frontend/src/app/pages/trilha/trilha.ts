@@ -12,20 +12,39 @@ import { TrilhaProgressService, TrilhaSection, NodeStatus } from '../../core/tri
 })
 export class Trilha {
 
+  // controla exibição do modal de reset
+  showResetDialog = false;
+
   // Injeção do serviço que controla o progresso da trilha
   constructor(private progress: TrilhaProgressService) {}
 
+  // ===== Controle do modal de confirmação =====
+
+  // abre o modal
+  openResetDialog() {
+    this.showResetDialog = true;
+  }
+
+  // fecha o modal sem resetar
+  closeResetDialog() {
+    this.showResetDialog = false;
+  }
+
+  // confirma o reset (chamado pelo botão "Sim, resetar" no modal)
+  confirmReset() {
+  this.progress.reset(); 
+  this.showResetDialog = false; // FECHA NA HORA
+}
+
+
   // Getter usado para acessar as seções direto no HTML
-  // Isso evita erro de referência antes do construtor rodar
   get sections(): TrilhaSection[] {
     return this.progress.sections;
   }
 
   // ===== Métodos usados no HTML =====
-  // Cada um desses apenas chama o método correspondente do service,
-  // servindo como “ponte” entre o template e a lógica do serviço.
 
-  // Zera todo o progresso da trilha.
+  // Zera todo o progresso da trilha (hoje só é chamado via confirmReset)
   resetProgress() {
     this.progress.reset();
   }
@@ -65,9 +84,3 @@ export class Trilha {
     return this.progress.totalXp();
   }
 }
-
-
-  
-
-
-

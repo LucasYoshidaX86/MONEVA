@@ -249,6 +249,50 @@ body, html {
   box-shadow: 0 4px 14px rgba(255,255,255,.18);
 }
 
+/* ============================
+   MODAL DE CONFIRMAÇÃO RESET
+=============================== */
+
+.reset-backdrop {
+  position: fixed;
+  inset: 0; /* top/right/bottom/left: 0 */
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100; /* acima da topbar (z-index: 10) e do restante */
+}
+
+.reset-modal {
+  background-color: #181c1f;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reset-modal h5 {
+  font-weight: 700;
+  color: #b9ffe7; /* mesmo tom do título da trilha */
+}
+
+.reset-modal p {
+  font-size: 0.95rem;
+  color: rgba(231, 255, 244, 0.9);
+}
+
+/* espaçamento entre botões (caso o Bootstrap não esteja aplicando gap) */
+.reset-modal .d-flex.gap-2 > * + * {
+  margin-left: 0.5rem;
+}
+
+/* opcional: destacar o botão de perigo */
+.reset-modal .btn-danger.btn-sm {
+  font-weight: 600;
+}
+
+
 /* ===== Responsivo ===== */
 @media (max-width: 576px) {
   .unit { width: 148px; height: 148px; }

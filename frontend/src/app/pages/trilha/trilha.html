@@ -24,7 +24,8 @@
           <span class="xp-value">{{ totalXp() }}</span>
         </div>
 
-        <button class="btn btn-outline-light btn-sm" (click)="resetProgress()">
+        <!-- Botão agora só abre o modal -->
+        <button class="btn btn-outline-light btn-sm" (click)="openResetDialog()">
           Resetar progresso
         </button>
       </div>
@@ -71,3 +72,32 @@
     </div>
   </main>
 </div>
+
+<!-- Modal de confirmação de reset -->
+@if (showResetDialog) {
+  <div class="reset-backdrop">
+    <div class="reset-modal card text-white p-4">
+      <h5 class="mb-3">Resetar progresso</h5>
+      <p class="mb-4">
+        Tem certeza que deseja <strong>resetar todo o seu progresso</strong> na trilha?<br>
+        Você vai perder o XP e todas as atividades concluídas.
+      </p>
+
+      <div class="d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="closeResetDialog()">
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger btn-sm"
+          (click)="confirmReset()">
+          Sim, resetar
+        </button>
+      </div>
+    </div>
+  </div>
+}
