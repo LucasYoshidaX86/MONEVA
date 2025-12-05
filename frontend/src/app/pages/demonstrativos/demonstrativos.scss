@@ -352,6 +352,7 @@
   place-items:center;
   background:rgba(0,0,0,.55);
   z-index:1000;
+  color: white;
 }
 
 .modal-card {
@@ -439,3 +440,124 @@ input, select {
   font-size: small;
 }
 .edit-link:hover{ color: #00c053; }  /* verde-padrão */
+
+
+/* Botão pill genérico */
+.pill-btn {
+  border-radius:999px;
+  padding:6px 12px;
+  border:1px solid rgba(255,255,255,.18);
+  background:#111827;
+  color:#e5e7eb;
+  font-size:.8rem;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.pill-btn:hover {
+  background:#1f2937;
+  border-color:rgba(255,255,255,.3);
+}
+
+/* Botão específico de tutorial */
+.pill-btn.tutorial {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:600;
+}
+
+/* Tutorial modal/card */
+.tutorial-modal .tutorial-card {
+  position:relative;
+  max-width:640px;
+}
+
+.tutorial-close {
+  position:absolute;
+  top:8px;
+  right:8px;
+  border:none;
+  background:transparent;
+  color:#9ca3af;
+  font-size:1.1rem;
+  cursor:pointer;
+  padding:4px;
+  border-radius:999px;
+  transition:.2s;
+}
+
+.tutorial-close:hover {
+  background:rgba(148,163,184,.2);
+  color:#e5e7eb;
+}
+
+.tutorial-intro {
+  font-size:.9rem;
+  color:#cbd5dc;
+  margin-bottom:10px;
+}
+
+.tutorial-section {
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px solid rgba(148,163,184,.35);
+}
+
+.tutorial-section h6 {
+  font-size:.9rem;
+  font-weight:700;
+  color:#e5e7eb;
+  margin-bottom:6px;
+}
+
+.tutorial-section ul {
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.tutorial-section li {
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  font-size:.85rem;
+  color:#d1d5db;
+  margin-bottom:6px;
+}
+
+/* Bolinha com ícone + visual */
+.icon-pill {
+  border-radius:999px;
+  min-width:26px;
+  height:26px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#111827;
+  border:1px solid rgba(148,163,184,.5);
+  font-size:.9rem;
+}
+
+.icon-pill.circle.plus {
+  background:#14532d;
+  border-color:#22c55e;
+  color:#dcfce7;
+}
+
+.icon-pill.circle.minus {
+  background:#7f1d1d;
+  border-color:#f97373;
+  color:#fee2e2;
+}
+
+.tutorial-footer {
+  margin-top:10px;
+  font-size:.8rem;
+  color:#9ca3af;
+}
+
+.fake-link {
+  text-decoration:underline;
+  color:#bfe9cf;
+}

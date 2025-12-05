@@ -6,6 +6,8 @@ import { RouterLink } from '@angular/router';
 import { TransactionsService, TransacaoDoc, Tipo, Meio } from '../../core/transactions.service';
 import { Timestamp } from '@angular/fire/firestore';
 
+declare var bootstrap: any;
+
 type Filtro = {
   tipo: 'todas' | 'entrada' | 'saida';
   meio: Meio | 'todos';
@@ -56,6 +58,7 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
   showSearch = signal(false);
   showMenu = signal(false);
   showTrash = signal(false);
+  showTutorial = signal(false);
 
   // ======= Dados =======
   categorias = [
@@ -67,6 +70,12 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
     { nome: 'Presentes',  emoji: '🎁', cor: '#d63031' },
     { nome: 'Educação',   emoji: '🎓', cor: '#e84393' },
     { nome: 'Outros',     emoji: '📦', cor: '#636e72' },
+  ];
+
+  categoriasReceita = [
+    { nome: 'Salário',   emoji: '💼', cor: '#22c55e' },
+    { nome: 'Depósito',  emoji: '🏦', cor: '#0ea5e9' },
+    { nome: 'Poupança',  emoji: '💰', cor: '#facc15' },
   ];
 
   // Carregado do Firestore para o mês
@@ -158,7 +167,14 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
 
   // ======= Chart =======
   private chart?: Chart;
-  ngAfterViewInit() { this.renderChart(); }
+  ngAfterViewInit() { 
+    this.renderChart(); 
+    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach((el: any) => {
+      new bootstrap.Tooltip(el);
+    });
+  }
+
   ngOnDestroy() { this.chart?.destroy(); this.unsub?.(); }
 
   constructor() {
@@ -306,6 +322,9 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
   abrirBusca(){ this.showSearch.set(true); }
   fecharBusca(){ this.showSearch.set(false); }
   abrirMenu(){ this.showMenu.set(!this.showMenu()); }
+  abrirTutorial() { this.showTutorial.set(true); }
+  fecharTutorial() { this.showTutorial.set(false); }
+
 
   // lixeira
   trash = signal<TransacaoDoc[]>([]);
@@ -349,13 +368,18 @@ export class Demonstrativos implements AfterViewInit, OnDestroy {
 
   // ====== Edição ======
   showEdit = signal(false);
-  formEdit: { id?: string; categoria: string; valor: number; meio: MeioValido; obs: string | null } = {
-    categoria: '', valor: 0, meio: 'pix', obs: null
+  formEdit: { id?: string; tipo: Tipo; categoria: string; valor: number; meio: MeioValido; obs: string | null } = {
+    tipo: 'saida',
+    categoria: '',
+    valor: 0,
+    meio: 'pix',
+    obs: null
   };
 
   abrirEditar(t: TransacaoDoc) {
     this.formEdit = {
       id: t.id!,
+      tipo: t.tipo,
       categoria: t.categoria,
       valor: Number(t.valor) || 0,
       meio: (t.meio as MeioValido) ?? 'pix',
